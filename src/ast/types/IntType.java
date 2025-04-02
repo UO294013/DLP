@@ -19,7 +19,7 @@ public class IntType extends AbstractType {
 
     @Override
     public Type arithmetic(Type rExpType, Locatable l) {
-        if (rExpType == IntType.getInstance()) { // TODO: Is it equivalent to rExpType.equals(this)?
+        if (rExpType == IntType.getInstance()) {
             return this;
         }
         if (rExpType instanceof ErrorType) {

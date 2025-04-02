@@ -32,12 +32,12 @@ public class FunctionCall extends AbstractExpression implements Statement {
 
     @Override
     public Type getType() {
-        return this.functionName.getType(); // TODO: Is this method necessary?
+        return this.functionName.getType();
     }
 
     @Override
     public void setType(Type type) {
-        this.functionName.setType(type); // TODO: Is this method necessary?
+        this.functionName.setType(type);
     }
 
     @Override

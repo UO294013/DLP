@@ -9,7 +9,7 @@ public class SymbolTable {
 	private final List<Map<String, Definition>> table;
 
 	public SymbolTable()  {
-		table = new LinkedList<>();
+		table = new LinkedList<Map<String,Definition>>();
 		table.add(scope, new HashMap<>());
 	}
 

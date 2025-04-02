@@ -1,5 +1,6 @@
 package visitor;
 
+import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.FunctionDefinition;
 import ast.locatables.definitions.VariableDefinition;
 import ast.locatables.expressions.FunctionCall;
@@ -13,19 +14,27 @@ public class IdentificationVisitor extends AbstractVisitor<Void, Void> {
 
     @Override
     public Void visit(FunctionCall f, Void paramType) {
-        if (symbolTable.find(f.getFunctionName().getName()) == null) {
+        Definition def = symbolTable.find(f.getFunctionName().getName());
+        if (def == null) {
             new ErrorType("Error: Function '" + f.getFunctionName().getName() +
                     "' can not be called (It is not defined or accessible from current scope)", f);
+        } else {
+            f.getFunctionName().def = def;
+            f.getFunctionName().setType(def.getType());
         }
-        // super.visit(f, paramType); // Descomentar esta línea lanza también error por Variable
+        // super.visit(f, paramType); // Uncommenting this would throw the same errors twice
         return null;
     }
 
     @Override
     public Void visit(Variable v, Void paramType) {
-        if (symbolTable.find(v.getName()) == null) {
+        Definition def = symbolTable.find(v.getName());
+        if (def == null) {
             new ErrorType("Error: Variable '" + v.getName() +
                     "' can not be accessed from current scope (Maybe it is not defined)", v);
+        } else {
+            v.def = def;
+            v.setType(def.getType());
         }
         super.visit(v, paramType);
         return null;

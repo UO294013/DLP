@@ -30,9 +30,9 @@ public class Main {
 		Visitor lValueVisitor = new LValueVisitor();
 		Visitor identificationVisitor = new IdentificationVisitor();
 		Visitor typeCheckingVisitor = new TypeCheckingVisitor();
-		ast.accept(lValueVisitor, ast);
-		ast.accept(identificationVisitor, ast);
-		ast.accept(typeCheckingVisitor, ast);
+		ast.accept(lValueVisitor, null);
+		ast.accept(identificationVisitor, null);
+		ast.accept(typeCheckingVisitor, null);
 
 		// * Check errors
 		if (ErrorHandler.getInstance().anyError()){
