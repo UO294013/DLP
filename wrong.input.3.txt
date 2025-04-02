@@ -7,8 +7,8 @@ let a:[
 
 function main(): void {
   log i && f; 			// Error 1: Type Error
-  log a >= 3; 			// Error 2
-  while (f)     		// Error 3
-    if (f)      		// Error 4
-      log !f;   		// Error 5
+  log a >= 3; 			// Error 2: Type Error
+  while (f)     		// Error 3: Type Error
+    if (f)      		// Error 4: Type Error
+      log !f;   		// Error 5: Type Error
 }

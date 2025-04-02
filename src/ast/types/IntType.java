@@ -35,7 +35,10 @@ public class IntType extends AbstractType {
 
     @Override
     public Type comparison(Type rExpType, Locatable l) {
-        if (rExpType == IntType.getInstance() || rExpType instanceof ErrorType) {
+        if (rExpType == IntType.getInstance()) {
+            return this;
+        }
+        if (rExpType instanceof ErrorType) {
             return rExpType;
         }
         return super.comparison(rExpType, l);
@@ -43,7 +46,10 @@ public class IntType extends AbstractType {
 
     @Override
     public Type logic(Type rExpType, Locatable l) {
-        if (rExpType == IntType.getInstance() || rExpType instanceof ErrorType) {
+        if (rExpType == IntType.getInstance()) {
+            return this;
+        }
+        if (rExpType instanceof ErrorType) {
             return rExpType;
         }
         return super.logic(rExpType, l);
@@ -63,6 +69,9 @@ public class IntType extends AbstractType {
 
     @Override
     public void mustBeBuiltIn(Locatable l) { }
+
+    @Override
+    public void mustBeLogical(Locatable l) { }
 
     @Override
     public Type canBeCast(Type type, Locatable l) {

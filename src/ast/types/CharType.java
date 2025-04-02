@@ -19,7 +19,10 @@ public class CharType extends AbstractType {
 
     @Override
     public Type arithmetic(Type rExpType, Locatable l) {
-        if (rExpType == CharType.getInstance() || rExpType instanceof ErrorType) {
+        if (rExpType == CharType.getInstance()) {
+            return IntType.getInstance();
+        }
+        if (rExpType instanceof ErrorType) {
             return rExpType;
         }
         return super.arithmetic(rExpType, l);
