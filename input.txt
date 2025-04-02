@@ -1,0 +1,20 @@
+// Global variables
+let i,n:int;
+let c:char;
+let record: [
+ let intField:int;
+ let realField:number;
+];
+// Functions
+function f(a:int, c:number):int {
+  let real:number;
+  real = c;
+  i = a;
+  return n;
+}
+// Main program
+function main(): void {
+  let i:int;
+  let r:number;
+  log i, f(n,r), record.intField, record.realField;
+}

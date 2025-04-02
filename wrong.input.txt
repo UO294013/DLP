@@ -1,0 +1,28 @@
+let integer:int;
+let character:char;
+let real, integer:number;   // Error 1
+
+function p(a:int): void {
+  let a:char;               // Error 2
+}
+
+let p:number;               // Error 3
+
+function real():number {    // Error 4
+  return 0;
+}
+
+let n,
+    n:int;                  // Just one error (Error 5)
+
+function main(): void {
+  let character:number;
+  let record:[
+    let character:char;     // No Error
+    let attr:char;
+    let attr:number;        // Error 6 (detected in .g4 or moved to IdentificationVisitor)
+  ];
+  input integer, i;         // Error 7
+  f();                      // Error 8
+  record.i = 0;             // Not an error yet, Type Error for the future
+}

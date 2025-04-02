@@ -1,0 +1,67 @@
+PROGRAMA
+========
+Un programa es una secuencia de definiciones. 
+Las definiciones pueden ser de variables o de funciones.
+
+DEFINICION DE VARIABLE
+======================
+La sintaxis de la definición de una variable empieza con la palabra 
+reservada "let", seguida de una lista (con al menos un elemento) de 
+identificadores separados por comas y finaliza con ":" y un tipo. 
+Las definiciones de variables terminan mediante el caracter ";"
+
+DEFINICION DE FUNCION
+======================
+Las funciones se definen mediante la palabra reservada "function" el
+ identificador de la función, una lista de parametros separados 
+ por comas entre "(" y ")" seguido de ":" y el tipo de retorno 
+ cuando sea necesario.
+El tipo de retorno y de los parámetros debe ser de tipo simple 
+(no se permiten ni arrays ni registros). 
+El cuerpo de la funcion va entre "{" y "}".
+El cuerpo de las funciones se compone de una secuencia de cero 
+o más definiciones de variables seguida de una secuencia de cero 
+o más sentencias.
+La funcion "main" es obligatoria, no devuelve nada, no recibe parámetros y 
+debe estar declarada en último lugar.
+
+TIPOS
+=====
+Los tipos simples son "int", "number" y "char".
+Los arrays se pueden crear con el constructor de tipos "[]",
+ especificando el tamaño con una constante entera, 
+ seguido de cualquier tipo.
+Se usa el constructor de tipos "record" para la creación de registros. 
+Los registros no tienen identificador, y los campos son declarados
+ como variables dentro de "[" "]".
+
+SENTENCIAS
+==========
+La sentencia de escritura consiste en la palabra reservada "log" seguida de una lista de una o más expresiones separadas por comas.
+La sentencia de lectura consiste en la palabra reservada "input" seguida de una lista de una o más expresiones separadas por comas.
+Una asignación está compuesta por dos expresiones separadas por el operador "=".
+La sentencia condicional "if"-"else" y la sentencia iterativa "while" siguen la sintaxis del lenguaje TypeScript: la condición entre paréntesis "(" ")" y 
+las sentencias del cuerpo van entre "{" "}" y solamente si hay una única sentencia pueden omitirse. 
+La sentencia de retorno consiste en la palabra reservada "return" seguida de una <expresión>.
+La invocación a una función sin retorno (se denomina procedimiento) será siempre una sentencia.
+Todas las sentencias excepto "if-else" y "while" finalizan con ";".
+
+EXPRESIONES
+===========
+La invocación a una función podrá ser también una expresión cuando retorne un valor.
+La conversión explícita a tipos simples (cast) se escribe entre paréntesis '(' ')' y sigue la sintaxis <expresión> "as" <tipo>. 
+Las expresiones están formadas por:
+- Constantes enteras, reales y caracter sin signo.
+- Identificadores
+- Los siguientes operadores aplicados a una o dos expresiones (por 
+orden de precedencia descendente):
+		( )			Non associative
+		[]			Non associative
+ 		.			Left associative
+        CAST     	Non associative
+		- (unary)	Non associative
+        !			Non associative
+		* / %		Left associative
+		+ -			Left associative
+	> >= < <= != ==	Left associative
+		&& ||		Left associative

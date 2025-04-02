@@ -1,0 +1,14 @@
+let i:int;
+let f:number;
+
+let a:[
+  let a:int;
+];
+
+function main(): void {
+  log i && f; 			// Error 1
+  log a >= 3; 			// Error 2
+  while (f)     		// Error 3
+    if (f)      		// Error 4
+      log !f;   		// Error 5
+}

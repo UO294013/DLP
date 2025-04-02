@@ -1,0 +1,56 @@
+PROGRAM
+=======
+A program is a sequence of definitions.
+Definitions can be variables or functions.
+
+VARIABLE DEFINITION
+===================
+The syntax of a variable definition starts with the "let" keyword, followed by a non-empty enumeration of comma-separated identifiers, ending with a ":" and a type.  
+Variable definitions must end with the ";" character.
+
+FUNCTION DEFINITION
+===================
+Functions are defined starting with the "function" keyword, the function identifier and a list of coma-separated parameters between ( and ) followed by ":" and the return type when needed. 
+The return type and parameter types must be built-in (i.e., no arrays or records). 
+The function body goes between { and }.
+Bodies of functions are composed by a sequence of zero or more variable definitions followed by a sequence of zero or more statements. 
+The last and mandatory function must be "main", starting point of the program execution 
+that does not return anything and receives no parameters. 
+
+TYPES
+=====
+Built-in types are "int", "number" and "char". 
+Array types can be created with the "[]" type constructor, specifying the size of the array with an integer constant, followed by any type.
+The "record" type constructor is added for specifying record types. 
+Records have no type identifier, and fields are declared as var definitions between [ and ]. 
+
+STATEMENTS
+==========
+The syntax of a write statement is the "log" keyword followed by a non-empty comma-separated list of expressions.
+The read statement is similar, but using the "input" keyword. 
+Assignments are built with two expressions separated by the "=" operator. 
+If / else and while statements follow the TypeScript syntax: the condition is enclosed by parenthesis "(" ")" and
+the statements of the body are enclosed by "{" "}", they only can be omitted if there is one single statement. 
+The return statement is composed by the "return" keyword followed by an <expression>. 
+An invocation of a function without return type (procedure) will be always a statement.
+All statements but if/else and while end with ";".
+
+EXPRESSIONS
+===========
+Function invocations may be also an expression, only if it returns a value.
+Explicit type conversions (cast expressions) are enclosed by parenthesis '(' ')' and follows the syntax <expression> "as" <type>. 
+Expressions are built with:
+- Integer, real and character constants without sign.
+- Identifiers.
+- The following operators applied to one or two expressions 
+(descending order of precedence):
+		( )			Non associative
+		[]			Non associative
+ 		.			Left associative
+        CAST     	Non associative
+		- (unary)	Non associative
+        !			Non associative
+		* / %		Left associative
+		+ -			Left associative
+	> >= < <= != ==	Left associative
+		&& ||		Left associative

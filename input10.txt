@@ -1,0 +1,29 @@
+// Global variables
+let i: int;						
+let r: number; 						
+let c: char; 						
+
+// Functions
+function f(pi:int, pr:number): int {	   
+  let lr:number; 						
+  let li:int;							
+  
+  li = pi;
+  lr = pr;
+  return pi;
+}
+
+// Main program
+function main(): void{							
+  let pair: [ 	   				
+    let integer:int;						
+    let character:char;	
+  ];
+	
+  i = 3;
+  c = 'a';
+  r = 3.8;
+  pair.integer = i;
+  pair.character = c;
+  f(i, r);
+}
