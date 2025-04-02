@@ -71,8 +71,7 @@ public class AbstractType implements Type {
 
     @Override
     public Type dot(String field, Locatable l) {
-        return new ErrorType("Error: Unsupported operation. Can not access " + field + " with type " +
-                this, l);
+        return new ErrorType("Error: Unsupported operation. Can not access field " + field, l);
     }
 
     @Override

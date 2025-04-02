@@ -1,10 +1,10 @@
 let date: [ 
  let day:int;
  let month:int;
- let day:number;		    // Error 1
+ let day:number;		    // Error 1: Identification error
 ];
 
 function main(): void {
-  input date.year;	        // Error 2
+  input date.year;	        // Error 2: Type error
 }
 

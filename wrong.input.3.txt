@@ -6,7 +6,7 @@ let a:[
 ];
 
 function main(): void {
-  log i && f; 			// Error 1
+  log i && f; 			// Error 1: Type Error
   log a >= 3; 			// Error 2
   while (f)     		// Error 3
     if (f)      		// Error 4

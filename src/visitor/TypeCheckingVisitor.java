@@ -64,6 +64,11 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     @Override
     public Void visit(FunctionCall f, Type paramType) {
         super.visit(f, paramType);
+        if (f.getFunctionName().getType() == null) {
+            /* new ErrorType("Function '" + f.getFunctionName().getName() + "' does not have a valid type.", f);
+            */ // Ya se lanza el error desde el IdentificationVisitor
+            return null;
+        }
         List<Type> types = new ArrayList<Type>();
         for(Expression e : f.getArguments()) {
             types.add(e.getType());
@@ -110,9 +115,9 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
         super.visit(v, paramType);
         if (v.def != null) {
             v.setType(v.def.getType());
-        } else {
-            new ErrorType("Variable: " + v.getName() + " not defined.", v);
-        }
+        } /* else { // Ya se lanza el error desde el IdentificationVisitor
+            // new ErrorType("Variable: " + v.getName() + " not defined.", v);
+        } */
         return null;
     }
 
@@ -135,7 +140,9 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     @Override
     public Void visit(Return r, Type paramType) {
         super.visit(r, paramType);
-        r.getExpression().getType().mustPromoteTo(paramType, r);
+        if (r.getExpression().getType() != null && paramType != null) {
+            r.getExpression().getType().mustPromoteTo(paramType, r);
+        }
         return null;
     }
 

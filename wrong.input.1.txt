@@ -4,8 +4,8 @@ let real:number;
 
 function main(): void{
   input integer; 
-  character = 8.5;	// Error 1
-  3 = integer;		// Error 2
-  input integer+2; 	// Error 3
+  character = 8.5;	// Error 1: Type error
+  3 = integer;		// Error 2: LValue error
+  input integer+2; 	// Error 3: LValue error
 }
 
