@@ -3,6 +3,7 @@ package visitor;
 import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.FunctionDefinition;
 import ast.locatables.definitions.VariableDefinition;
+import ast.locatables.expressions.FieldAccess;
 import ast.locatables.expressions.FunctionCall;
 import ast.locatables.expressions.Variable;
 import ast.types.ErrorType;
