@@ -33,7 +33,7 @@ G:
 	(30) VariableDefinition:    definition -> ID type
 	(31) RecordField:           definition -> ID type
 
-A: { expression.type }
+A: { expression.type, type.offset }
 
 R:
 	(1) IntLiteral:		        expression.type = IntType.getInstance();

@@ -5,10 +5,7 @@ import ast.ASTNode;
 import errorhandler.ErrorHandler;
 import parser.TSmmLexer;
 import parser.TSmmParser;
-import visitor.IdentificationVisitor;
-import visitor.TypeCheckingVisitor;
-import visitor.LValueVisitor;
-import visitor.Visitor;
+import visitor.*;
 
 public class Main {
 
@@ -41,6 +38,8 @@ public class Main {
 		}
 		else {
 			// * The AST is shown
+			Visitor offsetVisitor = new OffsetVisitor();
+			ast.accept(offsetVisitor, null);
 			IntrospectorModel model = new IntrospectorModel("Program", ast);
 			new IntrospectorView("Introspector", model);
 		}

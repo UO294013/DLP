@@ -7,8 +7,18 @@ import java.util.Objects;
 
 public class RecordField extends AbstractDefinition {
 
+    public int offset;
+
     public RecordField(String id, Type type, int row, int column) {
         super(id, type, row, column);
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     @Override
