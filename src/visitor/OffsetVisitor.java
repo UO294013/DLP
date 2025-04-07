@@ -20,6 +20,7 @@ public class OffsetVisitor extends AbstractVisitor<Void, Void> {
 
     @Override
     public Void visit(VariableDefinition vd, Void arg) {
+        super.visit(vd, null);
         // Global variables
         if (vd.getScope() == 0) {
             vd.setOffset(globalBytesSum);
@@ -30,6 +31,7 @@ public class OffsetVisitor extends AbstractVisitor<Void, Void> {
 
     @Override
     public Void visit(FunctionDefinition fd, Void arg) {
+        super.visit(fd, null);
         int localVariablesBytesSum = 0;
         // Parameters
         for (VariableDefinition varDef : fd.getVariableDefinitions()) {
