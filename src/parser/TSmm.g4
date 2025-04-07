@@ -85,7 +85,7 @@ funcdefinition returns [Definition ast] locals [List<VariableDefinition> args = 
     ;
 
 main returns [Definition ast] locals [List<VariableDefinition> args = new ArrayList<>(), List<VariableDefinition> defs = new ArrayList<>(), List<Statement> stmts = new ArrayList<>()]:
-    'function' 'main' '(' ')' ':' 'void' '{' (vardefinition { $defs.addAll($vardefinition.ast); })* (nonreturnstatement { $stmts.addAll($nonreturnstatement.ast); })* '}' { $ast = new FunctionDefinition("main", VoidType.getInstance(), $defs, $stmts, $start.getLine(), $start.getCharPositionInLine() + 1); }
+    'function' 'main' '(' ')' ':' 'void' '{' (vardefinition { $defs.addAll($vardefinition.ast); })* (nonreturnstatement { $stmts.addAll($nonreturnstatement.ast); })* '}' { $ast = new FunctionDefinition("main", new FunctionType(new ArrayList(), VoidType.getInstance()), $defs, $stmts, $start.getLine(), $start.getCharPositionInLine() + 1); }
     ;
 
 arguments returns [List<Expression> ast = new ArrayList<>()]:

@@ -1,4 +1,4 @@
-// Generated from D:/DLP/LAB/DLP/src/parser/TSmm.g4 by ANTLR 4.13.2
+// Generated from C:/Users/Vicente/Desktop/DLP/src/parser/TSmm.g4 by ANTLR 4.13.2
 package parser;
 
 import ast.*;
@@ -1351,7 +1351,7 @@ public class TSmmParser extends Parser {
 			}
 			setState(328);
 			match(T__37);
-			 ((MainContext)_localctx).ast =  new FunctionDefinition("main", VoidType.getInstance(), _localctx.defs, _localctx.stmts, _localctx.start.getLine(), _localctx.start.getCharPositionInLine() + 1); 
+			 ((MainContext)_localctx).ast =  new FunctionDefinition("main", new FunctionType(new ArrayList(), VoidType.getInstance()), _localctx.defs, _localctx.stmts, _localctx.start.getLine(), _localctx.start.getCharPositionInLine() + 1); 
 			}
 		}
 		catch (RecognitionException re) {

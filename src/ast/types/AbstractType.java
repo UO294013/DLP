@@ -50,7 +50,7 @@ public class AbstractType implements Type {
 
     @Override
     public void mustPromoteTo(Type rExpType, Locatable l) {
-        new ErrorType("Error: Unsupported operation. " + rExpType + " cannot be promoted to " + this, l);
+        new ErrorType("Error: Unsupported operation. " + this + " cannot be promoted to " + rExpType, l);
     }
 
     @Override
@@ -76,8 +76,8 @@ public class AbstractType implements Type {
 
     @Override
     public Type parenthesis(List<Type> types, Locatable l) {
-        return new ErrorType("Error: Unsupported operation. Can not call the function " + this +
-                " with the types " + types, l);
+        return new ErrorType("Error: Unsupported operation. Invalid use of parenthesis of function call " +
+                "on variable defined with type " + this, l);
     }
 
     @Override

@@ -1,4 +1,4 @@
-// Generated from D:/DLP/LAB/DLP/src/parser/TSmm.g4 by ANTLR 4.13.2
+// Generated from C:/Users/Vicente/Desktop/DLP/src/parser/TSmm.g4 by ANTLR 4.13.2
 package parser;
 
 import ast.*;

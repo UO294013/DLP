@@ -42,8 +42,7 @@ public class FunctionType extends AbstractType {
 
     @Override
     public String toString() {
-        return "FunctionType [returnType=" + returnType
-                + ", parameters=" + parameters + "]";
+        return "FunctionType";
     }
 
     // TODO: Size of the FunctionType?

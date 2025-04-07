@@ -1,6 +1,7 @@
 package visitor;
 
 import ast.Program;
+import ast.locatables.definitions.FunctionDefinition;
 import ast.locatables.expressions.*;
 import ast.statements.*;
 import ast.types.*;
@@ -157,6 +158,15 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     public Void visit(Write w, Type paramType) {
         super.visit(w, paramType);
         w.getExpression().getType().mustBeBuiltIn(w);
+        return null;
+    }
+
+    // DEFINITIONS
+
+    @Override
+    public Void visit(FunctionDefinition fd, Type paramType) {
+        Type retType = ((FunctionType) fd.getType()).getReturnType();
+        super.visit(fd, retType);
         return null;
     }
 }
