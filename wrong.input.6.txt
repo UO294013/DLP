@@ -5,7 +5,7 @@ function f(): void{
 }
 
 function main(): void {
-  a1 = a2;		        // Error 1
-  log a1;		        // Error 2
-  log f();		        // Error 3
+  a1 = a2;		        // Error 1: Type Error
+  log a1;		        // Error 2: Type Error
+  log f();		        // Error 3: Type Error
 }

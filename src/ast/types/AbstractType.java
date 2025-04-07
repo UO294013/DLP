@@ -65,8 +65,7 @@ public class AbstractType implements Type {
 
     @Override
     public Type squareBrackets(Type t, Locatable l) {
-        return new ErrorType("Error: Unsupported operation. Array access can not be applied to " + this +
-                " with type " + t, l);
+        return new ErrorType("Error: Unsupported operation. Array access can not be applied to " + this, l);
     }
 
     @Override
@@ -76,7 +75,7 @@ public class AbstractType implements Type {
 
     @Override
     public Type parenthesis(List<Type> types, Locatable l) {
-        return new ErrorType("Error: Unsupported operation. Invalid use of parenthesis of function call " +
+        return new ErrorType("Error: Unsupported operation. Invalid use of parenthesis (function call) " +
                 "on variable defined with type " + this, l);
     }
 

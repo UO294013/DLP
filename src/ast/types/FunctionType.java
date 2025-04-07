@@ -32,10 +32,10 @@ public class FunctionType extends AbstractType {
     @Override
     public Type parenthesis(List<Type> types, Locatable l) {
         if (parameters.size() != types.size()) {
-            super.parenthesis(types, l);
+            return new ErrorType("Error: Unexpected number of parameters passed", l);
         }
         for (int i = 0; i < types.size(); i++) {
-            parameters.get(i).getType().mustPromoteTo(types.get(i), l);
+            types.get(i).mustPromoteTo(parameters.get(i).getType(), l);
         }
         return this.returnType;
     }
