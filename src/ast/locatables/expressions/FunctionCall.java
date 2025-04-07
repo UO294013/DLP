@@ -1,7 +1,6 @@
 package ast.locatables.expressions;
 
 import ast.statements.Statement;
-import ast.types.Type;
 import visitor.Visitor;
 
 import java.util.List;
@@ -28,16 +27,6 @@ public class FunctionCall extends AbstractExpression implements Statement {
     @Override
     public <TP, TR> TR accept(Visitor<TP, TR> v, TP param) {
         return v.visit(this, param);
-    }
-
-    @Override
-    public Type getType() {
-        return this.functionName.getType();
-    }
-
-    @Override
-    public void setType(Type type) {
-        this.functionName.setType(type);
     }
 
     @Override

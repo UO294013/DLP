@@ -1,4 +1,3 @@
-
 let i:int;
 
 function f(a:int): int {

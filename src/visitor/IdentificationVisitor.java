@@ -3,8 +3,6 @@ package visitor;
 import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.FunctionDefinition;
 import ast.locatables.definitions.VariableDefinition;
-import ast.locatables.expressions.FieldAccess;
-import ast.locatables.expressions.FunctionCall;
 import ast.locatables.expressions.Variable;
 import ast.types.ErrorType;
 import symboltable.SymbolTable;
@@ -12,20 +10,6 @@ import symboltable.SymbolTable;
 public class IdentificationVisitor extends AbstractVisitor<Void, Void> {
 
     public SymbolTable symbolTable = new SymbolTable();
-
-    @Override
-    public Void visit(FunctionCall f, Void paramType) {
-        Definition def = symbolTable.find(f.getFunctionName().getName());
-        if (def == null) {
-            new ErrorType("Error: Function '" + f.getFunctionName().getName() +
-                    "' can not be called (It is not defined or accessible from current scope)", f);
-        } else {
-            f.getFunctionName().def = def;
-            f.getFunctionName().setType(def.getType());
-        }
-        // super.visit(f, paramType); // Uncommenting this would throw the same errors twice
-        return null;
-    }
 
     @Override
     public Void visit(Variable v, Void paramType) {
