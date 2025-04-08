@@ -1,5 +1,7 @@
 package visitor;
 
+import ast.Program;
+import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.FunctionDefinition;
 import ast.locatables.definitions.RecordField;
 import ast.locatables.definitions.VariableDefinition;
@@ -14,13 +16,20 @@ import ast.types.RecordType;
  * - Parameters: MINUS (-) Sum of the previous definitions' types sizes (including itself)
  * - RecordFields: Use as reference the address of the Record. Intercept them in the visit of RecordType
  */
-public class OffsetVisitor extends AbstractVisitor<Void, Void> {
+public class OffsetVisitor extends AbstractCGVisitor<Void, Void> {
 
     public int globalBytesSum = 0;
 
     @Override
+    public Void visit(Program p, Void arg) {
+        for (Definition d : p.getDefinitions()) {
+            d.accept(this, arg);
+        }
+        return null;
+    }
+
+    @Override
     public Void visit(VariableDefinition vd, Void arg) {
-        super.visit(vd, null);
         // Global variables
         if (vd.getScope() == 0) {
             vd.setOffset(globalBytesSum);
@@ -31,10 +40,14 @@ public class OffsetVisitor extends AbstractVisitor<Void, Void> {
 
     @Override
     public Void visit(FunctionDefinition fd, Void arg) {
-        super.visit(fd, null);
+        fd.getType().accept(this, arg);
         int localVariablesBytesSum = 0;
         // Parameters
         for (VariableDefinition varDef : fd.getVariableDefinitions()) {
+            varDef.accept(this, arg);
+            if (varDef.getType() instanceof RecordType) {
+                varDef.getType().accept(this, arg);
+            }
             localVariablesBytesSum += varDef.getType().getSize();
             varDef.setOffset(-localVariablesBytesSum);
         }
@@ -42,19 +55,19 @@ public class OffsetVisitor extends AbstractVisitor<Void, Void> {
     }
 
     @Override
-    public Void visit(FunctionType ft, Void p){
-        int paramsBytesSum = 0;
+    public Void visit(FunctionType ft, Void p) {
+        int paramsBytesSum = 4;
         // Local variables
         for (int i = ft.getParameters().size() - 1 ; i >= 0 ; i--) {
             VariableDefinition var = ft.getParameters().get(i);
-            var.setOffset(4 + paramsBytesSum);
+            var.setOffset(paramsBytesSum);
             paramsBytesSum += var.getType().getSize();
         }
         return null;
     }
 
     @Override
-    public Void visit(RecordType rt, Void p){
+    public Void visit(RecordType rt, Void p) {
         int fieldsBytesSum = 0;
         // Record fields
         for (RecordField rf : rt.getRecordFields()) {
