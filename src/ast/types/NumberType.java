@@ -56,7 +56,7 @@ public class NumberType extends AbstractType {
 
     @Override
     public Type canBeCast(Type type, Locatable l) {
-        if (type == NumberType.getInstance()) {
+        if (type == IntType.getInstance() || type == NumberType.getInstance() || type == CharType.getInstance()) {
             return this;
         }
         return super.canBeCast(type, l);
@@ -69,11 +69,16 @@ public class NumberType extends AbstractType {
 
     @Override
     public String toString() {
-        return "NumberType";
+        return "real";
     }
 
     @Override
     public int getSize() {
         return 4; // Number is 4 bytes
+    }
+
+    @Override
+    public String suffix() {
+        return "f";
     }
 }

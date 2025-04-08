@@ -81,12 +81,16 @@ public class AbstractType implements Type {
 
     @Override
     public void mustBeMain(String name, Locatable l) {
-        new ErrorType("Error: Unsupported operation. Function " + name + " with type" + this +
-                "is not main", l);
+        new ErrorType("Error: Unsupported operation. " + name + " is not a valid main", l);
     }
 
     @Override
     public int getSize() {
         return 0;
+    }
+
+    @Override
+    public String suffix() {
+        throw new IllegalStateException("Unsupported operation. Type does not have suffix");
     }
 }

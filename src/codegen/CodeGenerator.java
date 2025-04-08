@@ -39,4 +39,8 @@ public class CodeGenerator {
         out.println("\n#source\t\"" + inputFileName + "\"");
         out.flush();
     }
+
+    public void comment(String s) {
+        out.println("\n' * " + s);
+    }
 }

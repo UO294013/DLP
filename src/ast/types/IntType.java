@@ -88,11 +88,16 @@ public class IntType extends AbstractType {
 
     @Override
     public String toString() {
-        return "IntType";
+        return "int";
     }
 
     @Override
     public int getSize() {
         return 2; // int is 2 bytes
+    }
+
+    @Override
+    public String suffix() {
+        return "i";
     }
 }

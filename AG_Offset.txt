@@ -1,0 +1,41 @@
+Attribute Grammar (AG), defined by the following (G, A, R):
+
+G:
+	(1) IntLiteral:		        expression -> INT_CONSTANT
+	(2) CharLiteral:	        expression -> CHAR_CONSTANT
+	(3) NumberLiteral:	        expression -> REAL_CONSTANT
+	(4) Variable:		        expression -> ID
+	(5) Arithmetic:             expression1 -> expression2 (+|-|*|/|%) expression3
+	(6) ArrayAccess:            expression1 -> expression2 expression3
+	(7) Cast:                   expression1 -> expression2 type
+	(8) Comparison:             expression1 -> expression2 (>|>=|<|<=|==|!=) expression3
+	(9) FieldAccess:            expression1 -> expression2 ID
+	(10) FunctionCall:          expression1 -> ID expression2*
+	(11) FunctionCall:          statement -> ID expression*
+	(12) Logic:                 expression1 -> expression2 [&&||] expression3
+	(13) UnaryMinus:            expression1 -> expression2
+	(14) UnaryNot:              expression1 -> expression2
+	(15) Assignment:            statement -> expression1 expression2
+	(16) IfElse:                statement1 -> expression statement2* statement3*
+	(17) Read:                  statement -> expression
+	(18) Return:                statement -> expression
+	(19) While:                 statement1 -> expression statement2*
+	(20) Write:                 statement -> expression
+	(21) ArrayType:             type1 -> type2 INT_CONSTANT
+	(22) CharType:              type -> CHAR
+	(23) FunctionType:          type1 -> variabledefinition* type2
+	(24) IntType:               type -> INT
+	(25) NumberType:            type -> NUMBER
+	(26) RecordType:            type -> recordfield*
+	(27) VoidType:              type -> VOID
+	(28) Program:               program -> (variabledefinition|functiondefinition)* functiondefinition
+    (29) FunctionDefinition:    definition -> ID variabledefinition* type variabledefinition* statement*
+	(30) VariableDefinition:    definition -> ID type
+	(31) RecordField:           definition -> ID type
+
+A: { type.offset }
+
+R:
+	(X)
+	(X)
+	(X)

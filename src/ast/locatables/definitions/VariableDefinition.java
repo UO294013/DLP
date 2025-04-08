@@ -12,10 +12,6 @@ public class VariableDefinition extends AbstractDefinition implements Statement 
         super(varName, type, row, column);
     }
 
-    public int getOffset() {
-        return offset;
-    }
-
     public void setOffset(int offset) {
         this.offset = offset;
     }

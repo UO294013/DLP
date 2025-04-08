@@ -2,7 +2,6 @@ package ast.locatables.definitions;
 
 import ast.types.Type;
 import semantic.Visitor;
-
 import java.util.Objects;
 
 public class RecordField extends AbstractDefinition {
@@ -11,10 +10,6 @@ public class RecordField extends AbstractDefinition {
 
     public RecordField(String id, Type type, int row, int column) {
         super(id, type, row, column);
-    }
-
-    public int getOffset() {
-        return offset;
     }
 
     public void setOffset(int offset) {

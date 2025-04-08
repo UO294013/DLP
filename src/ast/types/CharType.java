@@ -70,11 +70,16 @@ public class CharType extends AbstractType {
 
     @Override
     public String toString() {
-        return "CharType";
+        return "char";
     }
 
     @Override
     public int getSize() {
         return 1; // Char is 1 byte
+    }
+
+    @Override
+    public String suffix() {
+        return "b";
     }
 }

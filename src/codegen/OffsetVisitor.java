@@ -7,6 +7,7 @@ import ast.locatables.definitions.RecordField;
 import ast.locatables.definitions.VariableDefinition;
 import ast.types.FunctionType;
 import ast.types.RecordType;
+import semantic.AbstractVisitor;
 
 /*
  * Offsets:
@@ -16,7 +17,7 @@ import ast.types.RecordType;
  * - Parameters: MINUS (-) Sum of the previous definitions' types sizes (including itself)
  * - RecordFields: Use as reference the address of the Record. Intercept them in the visit of RecordType
  */
-public class OffsetVisitor extends AbstractCGVisitor<Void, Void> {
+public class OffsetVisitor extends AbstractVisitor<Void, Void> {
 
     public int globalBytesSum = 0;
 
@@ -45,9 +46,7 @@ public class OffsetVisitor extends AbstractCGVisitor<Void, Void> {
         // Parameters
         for (VariableDefinition varDef : fd.getVariableDefinitions()) {
             varDef.accept(this, arg);
-            if (varDef.getType() instanceof RecordType) {
-                varDef.getType().accept(this, arg);
-            }
+            varDef.getType().accept(this, arg);
             localVariablesBytesSum += varDef.getType().getSize();
             varDef.setOffset(-localVariablesBytesSum);
         }
