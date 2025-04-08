@@ -1,4 +1,4 @@
-package visitor;
+package semantic;
 
 import ast.Program;
 import ast.locatables.definitions.FunctionDefinition;

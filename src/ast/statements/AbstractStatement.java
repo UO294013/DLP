@@ -1,6 +1,6 @@
 package ast.statements;
 
-import visitor.Visitor;
+import semantic.Visitor;
 
 public class AbstractStatement implements Statement {
 

@@ -1,4 +1,4 @@
-package visitor;
+package semantic;
 
 import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.FunctionDefinition;

@@ -2,7 +2,7 @@ package ast.types;
 
 import ast.locatables.Locatable;
 import ast.locatables.definitions.RecordField;
-import visitor.Visitor;
+import semantic.Visitor;
 
 import java.util.List;
 

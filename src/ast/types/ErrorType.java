@@ -2,7 +2,7 @@ package ast.types;
 
 import ast.locatables.Locatable;
 import errorhandler.ErrorHandler;
-import visitor.Visitor;
+import semantic.Visitor;
 
 import java.util.List;
 

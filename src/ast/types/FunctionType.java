@@ -2,7 +2,7 @@ package ast.types;
 
 import ast.locatables.Locatable;
 import ast.locatables.definitions.VariableDefinition;
-import visitor.Visitor;
+import semantic.Visitor;
 
 import java.util.List;
 
@@ -46,4 +46,8 @@ public class FunctionType extends AbstractType {
     }
 
     // TODO: Size of the FunctionType?
+    @Override
+    public int getSize() {
+        return 0;
+    }
 }

@@ -1,7 +1,7 @@
 package ast.locatables.definitions;
 
 import ast.types.Type;
-import visitor.Visitor;
+import semantic.Visitor;
 
 import java.util.Objects;
 

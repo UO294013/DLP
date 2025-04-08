@@ -1,20 +1,28 @@
-// Global variables
-let i,n:int;
-let c:char;
-let record: [
- let intField:int;
- let realField:number;
-];
-// Functions
-function f(a:int, c:number):int {
-  let real:number;
-  real = c;
-  i = a;
-  return n;
-}
-// Main program
-function main(): void {
-  let i:int;
-  let r:number;
-  log i, f(n,r), record.intField, record.realField;
+let c: char;
+let i: int;
+let r: number;
+
+function main(): void{
+	let a, i:int;
+	
+	c = 'a';
+	log c,'\n';
+
+	a = 1;
+	i = ('0' as int) * 3;
+	log a, ' ', i, '\n';
+		
+	input r;
+	log (2 as number) * r, '\n';
+	
+	log (3 as number) - 4.5, ' ', 
+            ('0' as number) / 48.0, ' ',
+            ('0' as int) % ('1' as int), ' ',
+            0 + ('1' as int), '\n';
+	log 1 < 2, ' ',
+	      4 >= 3, ' ',
+	      5 == 5, ' ',
+	      1 && 2, ' ',
+	      0 || 3, ' ',
+	      !0, '\n';
 }

@@ -1,6 +1,6 @@
 package ast.locatables.expressions;
 
-import visitor.Visitor;
+import semantic.Visitor;
 
 public class FieldAccess extends AbstractExpression {
 

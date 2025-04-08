@@ -21,4 +21,5 @@ public interface Type extends ASTNode {
     void mustBeMain(String name, Locatable l);
 
     int getSize();
+    String suffix();
 }

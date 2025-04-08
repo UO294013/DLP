@@ -1,4 +1,4 @@
-package visitor;
+package codegen;
 
 import ast.Program;
 import ast.locatables.definitions.Definition;

@@ -1,7 +1,7 @@
 package ast.types;
 
 import ast.locatables.Locatable;
-import visitor.Visitor;
+import semantic.Visitor;
 
 public class CharType extends AbstractType {
 

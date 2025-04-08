@@ -1,4 +1,4 @@
-package visitor;
+package codegen;
 
 import ast.Program;
 import ast.locatables.definitions.FunctionDefinition;
@@ -7,8 +7,11 @@ import ast.locatables.definitions.VariableDefinition;
 import ast.locatables.expressions.*;
 import ast.statements.*;
 import ast.types.*;
+import semantic.Visitor;
 
 public class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
+
+    public CodeGenerator codeGenerator;
 
     // PROGRAM
 

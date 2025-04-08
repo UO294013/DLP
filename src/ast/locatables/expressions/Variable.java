@@ -1,7 +1,7 @@
 package ast.locatables.expressions;
 
 import ast.locatables.definitions.Definition;
-import visitor.Visitor;
+import semantic.Visitor;
 
 import java.util.Objects;
 

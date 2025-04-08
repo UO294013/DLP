@@ -1,7 +1,7 @@
 package ast.locatables.expressions;
 
 import ast.types.Type;
-import visitor.Visitor;
+import semantic.Visitor;
 
 public class AbstractExpression implements Expression {
 
