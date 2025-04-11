@@ -1,5 +1,8 @@
 package codegen;
 
+import ast.types.CharType;
+import ast.types.IntType;
+import ast.types.NumberType;
 import ast.types.Type;
 
 import java.io.FileWriter;
@@ -94,7 +97,7 @@ public class CodeGenerator {
     }
 
     public void pushBP(){
-        try{
+        try {
             out.write("\n\tpush\tbp");
             out.flush();
         } catch (IOException e){
@@ -111,8 +114,26 @@ public class CodeGenerator {
         }
     }
 
+    public void pushb(char value) {
+        try {
+            out.write("\n\tpushb\t" + (int) value);
+            out.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void pushf(double value) {
+        try {
+            out.write("\n\tpushf\t" + value);
+            out.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void addi(){
-        try{
+        try {
             out.write("\n\taddi");
             out.flush();
         } catch (IOException e){
@@ -121,7 +142,7 @@ public class CodeGenerator {
     }
 
     public void muli(){
-        try{
+        try {
             out.write("\n\tmuli");
             out.flush();
         } catch (IOException e){
@@ -183,7 +204,7 @@ public class CodeGenerator {
     }
 
     public void addLabel(String label) {
-        try{
+        try {
             out.write("\n" + label + ":");
             out.flush();
         } catch (IOException e){
@@ -191,11 +212,119 @@ public class CodeGenerator {
         }
     }
 
-    public void convertTo(Type lExpType, Type rExpType) {
-
+    /**
+     * Types of convert operations:
+     *     b2i -> Transforms a char into an int
+     *     i2f -> Transforms an int into a float
+     *     f2i -> Transforms a float into an int
+     *     i2b -> Transforms an int into a char
+     */
+    public void convertTo(Type operandType, Type resultType) {
+        try {
+            if (resultType.suffix().equals("b") && operandType.suffix().equals("f")) {
+                out.write("\nf2i");
+                out.write("\ni2b");
+            } else if (resultType.suffix().equals("f") && operandType.suffix().equals("b")) {
+                out.write("\nb2i");
+                out.write("\ni2f");
+            } else {
+                out.write(operandType.suffix() + "2" + resultType.suffix());
+            }
+            out.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Valid arithmetic operations:
+     *     + -> Addition
+     *     - -> Subtraction
+     *     * -> Multiplication
+     *     / -> Division
+     *     % -> Modulus
+     */
     public void arithmetic(String operator, Type type) {
+        try {
+            switch (operator) {
+                case "+":
+                    out.write("\nadd" + type.suffix());
+                    break;
+                case "-":
+                    out.write("\nsub" + type.suffix());
+                    break;
+                case "*":
+                    out.write("\nmul" + type.suffix());
+                    break;
+                case "/":
+                    out.write("\ndiv" + type.suffix());
+                    break;
+                case "%":
+                    out.write("\nmod" + type.suffix());
+                    break;
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * Valid comparison operations:
+     *     >  -> Greater than
+     *     >= -> Greater or equal than
+     *     <  -> Lower than
+     *     <= -> Lower or equal than
+     *     == -> Equals
+     *     != -> Different
+     */
+    public void comparison(String operator, Type type) {
+        try {
+            switch (operator) {
+                case ">":
+                    out.write("\ngt" + type.suffix());
+                    break;
+                case ">=":
+                    out.write("\nge" + type.suffix());
+                    break;
+                case "<":
+                    out.write("\nlt" + type.suffix());
+                    break;
+                case "<=":
+                    out.write("\nle" + type.suffix());
+                    break;
+                case "==":
+                    out.write("\neq" + type.suffix());
+                    break;
+                case "!=":
+                    out.write("\nne" + type.suffix());
+                    break;
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Valid logic operations:
+     *     && -> Logic AND
+     *     || -> Logic OR
+     *     !  -> Unary logic NOT
+     */
+    public void logic(String operator) {
+        try {
+            switch (operator) {
+                case "&&":
+                    out.write("\nand");
+                    break;
+                case "||":
+                    out.write("\nor");
+                    break;
+                case "!":
+                    out.write("\nnot");
+                    break;
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }
