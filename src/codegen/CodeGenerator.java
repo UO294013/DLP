@@ -19,7 +19,7 @@ public class CodeGenerator {
         }
     }
 
-    // Low-level instructions
+    // Low-level instructions:
 
     public void load(Type type) {
         try {
@@ -44,19 +44,6 @@ public class CodeGenerator {
             out.write("\n\tenter\t" + enterValue);
             out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String nextLabel() {
-        return "label" + this.labels++;
-    }
-
-    public void addLabel(String label) {
-        try{
-            out.write("\n" + label + ":");
-            out.flush();
-        } catch (IOException e){
             e.printStackTrace();
         }
     }
@@ -142,7 +129,7 @@ public class CodeGenerator {
         }
     }
 
-    // Call to main and halt
+    // Call to main and halt:
 
     public void callMain() {
         try {
@@ -160,7 +147,7 @@ public class CodeGenerator {
         }
     }
 
-    // Directives (#) and Comments (' *)
+    // Directives (#) and Comments (' *):
 
     public void line(int lineNumber) {
         try {
@@ -187,5 +174,28 @@ public class CodeGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Utility methods:
+
+    public String nextLabel() {
+        return "label" + this.labels++;
+    }
+
+    public void addLabel(String label) {
+        try{
+            out.write("\n" + label + ":");
+            out.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void convertTo(Type lExpType, Type rExpType) {
+
+    }
+
+    public void arithmetic(String operator, Type type) {
+
     }
 }

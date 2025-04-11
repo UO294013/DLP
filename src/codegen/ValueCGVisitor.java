@@ -16,7 +16,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   exp2.type.convertTo(exp1.type) // cg.convert(exp2.type, exp1.type)
      *   value[[exp3]]
      *   exp3.type.convertTo(exp1.type) // cg.convert(exp3.type, exp1.type)
-     *   switch (exp1.operator) {
+     *   switch (exp1.operator) { // cg.arithmetic(exp1.getOperator(), exp1.getType())
      *     case "+": <add> exp1.type.suffix() break;
      *     case "-": <sub> exp1.type.suffix() break;
      *     case "*": <div> exp1.type.suffix() break;
@@ -25,9 +25,18 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(ArithmeticOperation a, Void arg) {
+        a.getLeftOperand().accept(this, null);
+        codeGenerator.convertTo(a.getLeftOperand().getType(), a.getType());
+        a.getRightOperand().accept(this, null);
+        codeGenerator.convertTo(a.getRightOperand().getType(), a.getType());
+        codeGenerator.arithmetic(a.getOperatorName(), a.getType());
         return null;
     }
 
+    /**
+     * execute[[ArrayAccess: exp1 -> exp2 exp3]]():
+     *
+     */
     @Override
     public Void visit(ArrayAccess a, Void arg) {
         return null;

@@ -1,6 +1,5 @@
 package codegen;
 
-import ast.locatables.definitions.RecordField;
 import ast.locatables.definitions.VariableDefinition;
 import ast.locatables.expressions.ArrayAccess;
 import ast.locatables.expressions.FieldAccess;
