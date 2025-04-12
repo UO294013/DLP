@@ -101,19 +101,29 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * execute[[FieldAccess: exp1 -> exp2 ID]]():
-     *     // TODO: Acabar
+     *     address[[exp1]]
+     *     <load> exp1.type.suffix()
      */
     @Override
     public Void visit(FieldAccess f, Void arg) {
+        f.accept(addressCGVisitor, null);
+        codeGenerator.load(f.getType());
         return null;
     }
 
     /**
-     * execute[[FieldCall: statement -> ID expression*]]():
-     *     // TODO: Acabar
+     * execute[[FunctionCall: statement -> ID expression*]]():
+     *     for (Expression exp : expression*) {
+     *         value[[exp]]
+     *     }
+     *     <call> ID
      */
     @Override
     public Void visit(FunctionCall f, Void arg) {
+        for (Expression exp : f.getArguments()) {
+            exp.accept(this, null);
+        }
+        codeGenerator.call(f.getFunctionName().getName());
         return null;
     }
 
@@ -136,7 +146,6 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   switch (exp1.operator) {  // cg.logic(exp1.getOperator(), exp1.getType())
      *     case "&&": <and> break;
      *     case "||": <or> break;
-     *     case "!": <not> break;
      *   }
      */
     @Override
@@ -161,19 +170,31 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * execute[[UnaryMinus: exp1 -> exp2]]():
-     *     // TODO: Acabar.
+     *     value[[exp2]]
+     *     exp2.type.convertTo(exp1.type) // cg.convert(exp2.type, exp1.type)
+     *     <push> exp2.type.suffix() < 0>
+     *     <sub> exp2.type.suffix()
      */
     @Override
     public Void visit(UnaryMinus u, Void arg) {
+        u.getExpression().accept(this, null);
+        codeGenerator.convertTo(u.getExpression().getType(), u.getType());
+        codeGenerator.push(u.getExpression().getType(), 0);
+        codeGenerator.sub(u.getExpression().getType());
         return null;
     }
 
     /**
      * execute[[UnaryNot: exp1 -> exp2]]():
-     *     // TODO: Acabar. El operador lógico (!) se debe quitar de "logic"?
+     *     value[[exp2]]
+     *     exp2.type.convertTo(exp1.type) // cg.convert(exp2.type, exp1.type)
+     *     <not>
      */
     @Override
     public Void visit(UnaryNot u, Void arg) {
+        u.getExpression().accept(this, null);
+        codeGenerator.convertTo(u.getExpression().getType(), u.getType());
+        codeGenerator.not();
         return null;
     }
 

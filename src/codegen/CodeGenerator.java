@@ -1,8 +1,5 @@
 package codegen;
 
-import ast.types.CharType;
-import ast.types.IntType;
-import ast.types.NumberType;
 import ast.types.Type;
 
 import java.io.FileWriter;
@@ -26,7 +23,7 @@ public class CodeGenerator {
 
     public void load(Type type) {
         try {
-            out.write("\n\tload\t" + type.suffix());
+            out.write("\n\tload" + type.suffix());
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,7 +32,7 @@ public class CodeGenerator {
 
     public void store(Type type) {
         try {
-            out.write("\n\tstore\t" + type.suffix());
+            out.write("\n\tstore" + type.suffix());
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,7 +68,7 @@ public class CodeGenerator {
 
     public void in(Type type) {
         try {
-            out.write("\n\tin\t" + type.suffix());
+            out.write("\n\tin" + type.suffix());
             out.flush();
         } catch (IOException e){
             e.printStackTrace();
@@ -80,7 +77,7 @@ public class CodeGenerator {
 
     public void out(Type type) {
         try {
-            out.write("\n\tout\t" + type.suffix());
+            out.write("\n\tout" + type.suffix());
             out.flush();
         } catch (IOException e){
             e.printStackTrace();
@@ -132,7 +129,16 @@ public class CodeGenerator {
         }
     }
 
-    public void addi(){
+    public void push(Type type, int value) {
+        try {
+            out.write("\n\tpush" + type.suffix() + "\t" + value);
+            out.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void addi() {
         try {
             out.write("\n\taddi");
             out.flush();
@@ -141,9 +147,18 @@ public class CodeGenerator {
         }
     }
 
-    public void muli(){
+    public void muli() {
         try {
             out.write("\n\tmuli");
+            out.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sub(Type type) {
+        try {
+            out.write("\n\tsub" + type.suffix());
             out.flush();
         } catch (IOException e){
             e.printStackTrace();
@@ -208,6 +223,15 @@ public class CodeGenerator {
             out.write("\n" + label + ":");
             out.flush();
         } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void call(String funcName) {
+        try {
+            out.write("\n\tcall\t" + funcName);
+            out.flush();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -305,10 +329,9 @@ public class CodeGenerator {
     }
 
     /**
-     * Valid logic operations:
+     * Valid logic BINARY operations:
      *     && -> Logic AND
      *     || -> Logic OR
-     *     !  -> Unary logic NOT
      */
     public void logic(String operator) {
         try {
@@ -319,11 +342,21 @@ public class CodeGenerator {
                 case "||":
                     out.write("\nor");
                     break;
-                case "!":
-                    out.write("\nnot");
-                    break;
             }
         } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Valid logic UNARY operations:
+     *     !  -> Unary logic NOT
+     */
+    public void not() {
+        try {
+            out.write("\n\tnot");
+            out.flush();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
