@@ -1,6 +1,8 @@
 package codegen;
 
 import ast.locatables.expressions.*;
+import ast.types.ArrayType;
+import ast.types.ErrorType;
 
 public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
@@ -8,6 +10,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     public ValueCGVisitor(CodeGenerator cg) {
         this.codeGenerator = cg;
+        this.addressCGVisitor = new AddressCGVisitor(cg);
     }
 
     /**
@@ -36,10 +39,24 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * execute[[ArrayAccess: exp1 -> exp2 exp3]]():
-     *     // TODO: How can we implement the array access?
+     *     address[[exp1]]
+     *     <load> exp1.type.suffix()
      */
     @Override
     public Void visit(ArrayAccess a, Void arg) {
+        a.accept(addressCGVisitor, null);
+        codeGenerator.load(a.getType());
+
+        // Checking if the index is valid
+        int size = ((ArrayType) a.getArrayExpression().getType()).getSize();
+        try {
+            if (((IntLiteral) a.getIndexExpression()).getValue() >=  size
+                    || ((IntLiteral) a.getIndexExpression()).getValue() < 0) {
+                new ErrorType("Semantic ERROR: index out of bounds, the size is " + size, a);
+            }
+        } catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
         return null;
     }
 

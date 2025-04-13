@@ -4,6 +4,7 @@ import ast.Program;
 import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.*;
 import ast.statements.*;
+import ast.types.FunctionType;
 
 public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
@@ -12,13 +13,15 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     public ExecuteCGVisitor(CodeGenerator cg) {
         this.codeGenerator = cg;
+        this.addressCGVisitor = new AddressCGVisitor(cg);
+        this.valueCGVisitor = new ValueCGVisitor(cg);
     }
 
     // PROGRAM
 
     /**
      * execute[[Program: program -> definition*]]():
-     *   ' * Global variables:
+     *   // ' * Global variables:
      *   for (Definition def : definition*) {
      * 	   if (def instanceof VariableDefinition) {
      * 	     execute[[def]]()
@@ -34,7 +37,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(Program p, Void arg) {
-        codeGenerator.comment("\n' * " + "Global variables:");
+        // codeGenerator.comment("\n' * " + "Global variables:");
         for (Definition def : p.getDefinitions()) {
             if (def instanceof VariableDefinition) {
                 def.accept(this, arg);
@@ -58,7 +61,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(VariableDefinition vd, Void arg) {
-        codeGenerator.comment("\n' * " + vd.getType().toString() + " " + vd.getName()
+        codeGenerator.comment("\n\t' * " + vd.getType().toString() + " " + vd.getName()
                 + " (offset " + vd.offset + ")");
         return null;
     }
@@ -82,20 +85,35 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(FunctionDefinition vd, Void arg) {
-        codeGenerator.comment(vd.getName() + ":");
-        codeGenerator.comment("\n' * Parameters:");
+        codeGenerator.line(vd.getLine());
+        codeGenerator.comment("\n\n " + vd.getName() + ":");
+        codeGenerator.comment("\n\t' * Parameters:");
         vd.getType().accept(this, arg);
-        codeGenerator.comment("\n' * Local variables:");
+        codeGenerator.comment("\n\t' * Local variables:");
         for (VariableDefinition varDef : vd.getVariableDefinitions()) {
             varDef.accept(this, arg);
+        }
+        if (!vd.getVariableDefinitions().isEmpty()) {
+            int enterValue = -vd.getVariableDefinitions().getLast().offset;
+            codeGenerator.enter(enterValue);
         }
         for (Statement stmt : vd.getStatements()) {
             codeGenerator.line(stmt.getLine());
             stmt.accept(this, arg);
         }
-        if (!vd.getVariableDefinitions().isEmpty()) {
-            int enterValue = -vd.getVariableDefinitions().getLast().offset;
-            codeGenerator.enter(enterValue);
+        return null;
+    }
+
+    /**
+     * execute[[FunctionType: type1 -> varDefinition* type2]]():
+     *     for (VariableDefinition vd : varDefinition*) {
+     *         execute[[vd]]
+     *     }
+     */
+    @Override
+    public Void visit(FunctionType f, Void arg) {
+        for (VariableDefinition vd : f.getParameters()) {
+            vd.accept(this, arg);
         }
         return null;
     }
@@ -106,7 +124,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(RecordField rf, Void arg) {
-        codeGenerator.comment("\n' * " + rf.getType().toString() + " " + rf.getName()
+        codeGenerator.comment("\n\t' * " + rf.getType().toString() + " " + rf.getName()
                 + " (offset " + rf.offset + ")");
         return null;
     }
@@ -122,6 +140,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(Assignment a, Void arg) {
+        codeGenerator.comment("\n\t' * Assignment");
         a.getLExp().accept(addressCGVisitor, arg);
         a.getRExp().accept(valueCGVisitor, arg);
         codeGenerator.store(a.getLExp().getType());
@@ -145,7 +164,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(IfElse ie, Void arg) {
-        codeGenerator.comment("' * IfElse");
+        codeGenerator.comment("\n\t' * IfElse");
         String elseLabel = codeGenerator.nextLabel();
         String exitLabel = codeGenerator.nextLabel();
         ie.getCondition().accept(valueCGVisitor, arg);
@@ -171,22 +190,22 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(Read r, Void arg) {
-        codeGenerator.comment("' * Read");
+        codeGenerator.comment("\n\t' * Read");
         r.getExpression().accept(addressCGVisitor, arg);
         codeGenerator.in(r.getExpression().getType());
         codeGenerator.store(r.getExpression().getType());
         return null;
     }
 
-    /** TODO: How can we do the return statement?
-     * execute[[Read: statement -> expression]]():
-     *   <' * Read>
-     *   address[[expression]]
-     *   <in>expression.type.suffix()
-     *   <store>expression.type.suffix()
+    /**
+     * execute[[Return: statement -> expression]]():
+     *   <' * Return>
+     *   value[[expression]]
+     *   <ret> ?, ?, ?
      */
     @Override
     public Void visit(Return r, Void arg) {
+        // TODO: RETURN STATEMENT?
         return null;
     }
 
@@ -204,7 +223,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(While w, Void arg) {
-        codeGenerator.comment("' * While");
+        codeGenerator.comment("\n\t' * While");
         String conditionLabel = codeGenerator.nextLabel();
         String exitLabel = codeGenerator.nextLabel();
         codeGenerator.addLabel(conditionLabel);
@@ -226,7 +245,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(Write w, Void arg) {
-        codeGenerator.comment("' * Write");
+        codeGenerator.comment("\n\t' * Write");
         w.getExpression().accept(valueCGVisitor, arg);
         codeGenerator.out(w.getExpression().getType());
         return null;

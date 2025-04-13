@@ -169,6 +169,8 @@ public class CodeGenerator {
 
     public void callMain() {
         try {
+            out.write("\n");
+            out.write("\n' Invocation to the main function");
             out.write("\ncall main");
         } catch (IOException e) {
             e.printStackTrace();
@@ -178,6 +180,7 @@ public class CodeGenerator {
     public void halt() {
         try {
             out.write("\nhalt");
+            out.write("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -187,6 +190,7 @@ public class CodeGenerator {
 
     public void line(int lineNumber) {
         try {
+            out.write("\n");
             out.write("\n#line\t" + lineNumber);
             out.flush();
         } catch (IOException e) {
@@ -197,6 +201,7 @@ public class CodeGenerator {
     public void source(String inputFileName) {
         try {
             out.write("\n#source\t\"" + inputFileName + "\"");
+            out.write("\n");
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -245,16 +250,18 @@ public class CodeGenerator {
      */
     public void convertTo(Type operandType, Type resultType) {
         try {
-            if (resultType.suffix().equals("b") && operandType.suffix().equals("f")) {
-                out.write("\nf2i");
-                out.write("\ni2b");
-            } else if (resultType.suffix().equals("f") && operandType.suffix().equals("b")) {
-                out.write("\nb2i");
-                out.write("\ni2f");
-            } else {
-                out.write(operandType.suffix() + "2" + resultType.suffix());
+            if (!resultType.suffix().equals(operandType.suffix())) {
+                if (resultType.suffix().equals("b") && operandType.suffix().equals("f")) {
+                    out.write("\n\tf2i");
+                    out.write("\n\ti2b");
+                } else if (resultType.suffix().equals("f") && operandType.suffix().equals("b")) {
+                    out.write("\n\tb2i");
+                    out.write("\n\ti2f");
+                } else {
+                    out.write("\n\t" + operandType.suffix() + "2" + resultType.suffix());
+                }
+                out.flush();
             }
-            out.flush();
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -272,19 +279,19 @@ public class CodeGenerator {
         try {
             switch (operator) {
                 case "+":
-                    out.write("\nadd" + type.suffix());
+                    out.write("\n\tadd" + type.suffix());
                     break;
                 case "-":
-                    out.write("\nsub" + type.suffix());
+                    out.write("\n\tsub" + type.suffix());
                     break;
                 case "*":
-                    out.write("\nmul" + type.suffix());
+                    out.write("\n\tmul" + type.suffix());
                     break;
                 case "/":
-                    out.write("\ndiv" + type.suffix());
+                    out.write("\n\tdiv" + type.suffix());
                     break;
                 case "%":
-                    out.write("\nmod" + type.suffix());
+                    out.write("\n\tmod" + type.suffix());
                     break;
             }
         } catch (IOException e){
@@ -305,22 +312,22 @@ public class CodeGenerator {
         try {
             switch (operator) {
                 case ">":
-                    out.write("\ngt" + type.suffix());
+                    out.write("\n\tgt" + type.suffix());
                     break;
                 case ">=":
-                    out.write("\nge" + type.suffix());
+                    out.write("\n\tge" + type.suffix());
                     break;
                 case "<":
-                    out.write("\nlt" + type.suffix());
+                    out.write("\n\tlt" + type.suffix());
                     break;
                 case "<=":
-                    out.write("\nle" + type.suffix());
+                    out.write("\n\tle" + type.suffix());
                     break;
                 case "==":
-                    out.write("\neq" + type.suffix());
+                    out.write("\n\teq" + type.suffix());
                     break;
                 case "!=":
-                    out.write("\nne" + type.suffix());
+                    out.write("\n\tne" + type.suffix());
                     break;
             }
         } catch (IOException e){
@@ -337,10 +344,10 @@ public class CodeGenerator {
         try {
             switch (operator) {
                 case "&&":
-                    out.write("\nand");
+                    out.write("\n\tand");
                     break;
                 case "||":
-                    out.write("\nor");
+                    out.write("\n\tor");
                     break;
             }
         } catch (IOException e){
