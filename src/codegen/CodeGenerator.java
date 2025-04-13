@@ -165,6 +165,16 @@ public class CodeGenerator {
         }
     }
 
+    public void ret(int bytesToReturn, int bytesOfLocalVariables, int bytesOfArgs) {
+        try {
+            out.write("\n\tret " + bytesToReturn + ", " + bytesOfLocalVariables + ", " + bytesOfArgs);
+            out.write("\n");
+            out.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     // Call to main and halt:
 
     public void callMain() {

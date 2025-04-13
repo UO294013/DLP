@@ -20,7 +20,7 @@ public class NumberType extends AbstractType {
     @Override
     public Type arithmetic(Type rExpType, Locatable l) {
         if (rExpType == NumberType.getInstance()) {
-            return IntType.getInstance();
+            return this;
         }
         if (rExpType instanceof ErrorType) {
             return rExpType;

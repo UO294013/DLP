@@ -101,6 +101,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
             codeGenerator.line(stmt.getLine());
             stmt.accept(this, arg);
         }
+        codeGenerator.ret(0, 4, 0); // TODO: Remove hardcoded
         return null;
     }
 
@@ -205,7 +206,8 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(Return r, Void arg) {
-        // TODO: RETURN STATEMENT?
+        r.getExpression().accept(valueCGVisitor, arg);
+        codeGenerator.ret(0, 0, 0); // TODO: Remove hardcoded
         return null;
     }
 
