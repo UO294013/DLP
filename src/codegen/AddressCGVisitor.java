@@ -16,9 +16,9 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * address[[ArrayAccess: exp1 → exp2 exp3]]():
-     *     address[[expression2]]
-     *     value[[expression3]]
-     *     <pushi> expression1.type.numberOfBytes()
+     *     address[[exp2]]
+     *     value[[exp3]]
+     *     <pushi> exp1.type.numberOfBytes()
      *     <muli>
      *     <addi>
      */
@@ -35,7 +35,7 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void, Void> {
     /**
      * address[[FieldAccess: exp1 → exp2 ID]]():
      *     address[[exp2]]
-     *     <pushi> exp.definition.offset
+     *     <pushi> exp2.type.getField(ID).offset // ((RecordType) exp2.type).field.offset
      *     <addi>
      */
     @Override

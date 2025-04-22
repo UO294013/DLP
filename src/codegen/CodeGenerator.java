@@ -48,18 +48,27 @@ public class CodeGenerator {
         }
     }
 
-    public void jmp(String label) {
+    public void jmp(int labelNum) {
         try {
-            out.write("\n\tjmp\t" + label);
+            out.write("\n\tjmp\tlabel" + labelNum);
             out.flush();
         } catch (IOException e){
             e.printStackTrace();
         }
     }
 
-    public void jz(String label) {
+    public void jz(int labelNum) {
         try {
-            out.write("\n\tjz\t" + label);
+            out.write("\n\tjz\tlabel" + labelNum);
+            out.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void jnz(int labelNum) {
+        try {
+            out.write("\n\tjnz\tlabel" + labelNum);
             out.flush();
         } catch (IOException e){
             e.printStackTrace();
@@ -233,9 +242,16 @@ public class CodeGenerator {
         return "label" + this.labels++;
     }
 
-    public void addLabel(String label) {
+    /* This could be used as well to create all the labels for a method at the same time */
+    public int getLabels(int size) {
+        int temp = labels;
+        labels += size;
+        return temp;
+    }
+
+    public void addLabel(int labelNum) {
         try {
-            out.write("\n" + label + ":");
+            out.write("\nlabel" + labelNum + ":");
             out.flush();
         } catch (IOException e){
             e.printStackTrace();

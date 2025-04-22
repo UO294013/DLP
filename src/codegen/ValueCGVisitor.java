@@ -38,7 +38,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[ArrayAccess: exp1 -> exp2 exp3]]():
+     * value[[ArrayAccess: exp1 -> exp2 exp3]]():
      *     address[[exp1]]
      *     <load> exp1.type.suffix()
      */
@@ -61,7 +61,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[Cast: exp1 -> exp2 type]]():
+     * value[[Cast: exp1 -> exp2 type]]():
      *   value[[exp2]]
      *   // cg.convertTo(exp2.type, type)
      *   if (type.suffix().equals("b") && exp2.type.suffix().equals("f")) {
@@ -82,7 +82,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[CharLiteral: exp -> CHAR_CONSTANT]]():
+     * value[[CharLiteral: exp -> CHAR_CONSTANT]]():
      *   <pushb> exp.value
      */
     @Override
@@ -117,7 +117,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[FieldAccess: exp1 -> exp2 ID]]():
+     * value[[FieldAccess: exp1 -> exp2 ID]]():
      *     address[[exp1]]
      *     <load> exp1.type.suffix()
      */
@@ -129,7 +129,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[FunctionCall: statement -> ID expression*]]():
+     * value[[FunctionCall: statement -> ID expression*]]():
      *     for (Expression exp : expression*) {
      *         value[[exp]]
      *     }
@@ -145,7 +145,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[IntLiteral: exp -> INT_CONSTANT]]():
+     * value[[IntLiteral: exp -> INT_CONSTANT]]():
      *   <pushi> exp.value
      */
     @Override
@@ -176,7 +176,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[NumberLiteral: exp -> REAL_CONSTANT]]():
+     * value[[NumberLiteral: exp -> REAL_CONSTANT]]():
      *   <pushf> exp.value
      */
     @Override
@@ -186,7 +186,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[UnaryMinus: exp1 -> exp2]]():
+     * value[[UnaryMinus: exp1 -> exp2]]():
      *     value[[exp2]]
      *     exp2.type.convertTo(exp1.type) // cg.convert(exp2.type, exp1.type)
      *     <push> exp2.type.suffix() < 0>
@@ -202,7 +202,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[UnaryNot: exp1 -> exp2]]():
+     * value[[UnaryNot: exp1 -> exp2]]():
      *     value[[exp2]]
      *     exp2.type.convertTo(exp1.type) // cg.convert(exp2.type, exp1.type)
      *     <not>
@@ -216,7 +216,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[Variable: exp -> ID]]():
+     * value[[Variable: exp -> ID]]():
      *   address[[exp]]
      *   <load> exp.type.suffix()
      */

@@ -67,7 +67,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[FunctionDefinition: definition -> ID varDefinition* type varDefinition* statement*]]():
+     * execute[[FunctionDefinition: definition -> ID varDefinition* type varDefinition* stmt*]]():
      *   ID<:>
      *   <' * Parameters:>
      *   execute[[type]]
@@ -75,7 +75,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   for (VariableDefinition vd : varDefinition*) {
      *       execute[[vd]]
      *   }
-     *   for (Statement stmt : statement*) {
+     *   for (Statement stmt : stmt*) {
      *     cg.line(stmt.getLine())
      *     execute[[stmt]]
      *   }
@@ -133,7 +133,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     // STATEMENTS
 
     /**
-     * execute[[Assignment: statement -> exp1 exp2]]():
+     * execute[[Assignment: stmt -> exp1 exp2]]():
      *     <' * Assignment>
      *     address[[exp1]]
      *     value[[exp2]]
@@ -149,45 +149,47 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[IfElse: statement1 -> exp statement2* statement3*]]():
-     *     <' * IfElse>
-     *     value[[exp]]
-     *     <jz else>
-     *     for (Statement st : statement2*) {
-     *         execute[[st]]
-     *     }
-     *     <jmp exit>
-     *     else:
-     *         for (Statement st : statement3*) {
-     *             execute[[st]]
-     *         }
-     *     exit:
+     * execute[[IfElse: stmt1 -> exp stmt2* stmt3*]]():
+     *   <' * IfElse>
+     *   int label1 = cg.getLabels(3)
+     *   value[[exp]]
+     *   <jz label>label1 + 1
+     *   <label>label1<:>
+     *   for (Statement st : stmt2*) {
+     *       execute[[st]]
+     *   }
+     *   <jmp label>label1 + 2
+     *   <label>label1 + 1<:>
+     *   for (Statement st : stmt3*) {
+     *       execute[[st]]
+     *   }
+     *   <label>label1 + 2<:>
      */
     @Override
-    public Void visit(IfElse ie, Void arg) {
+    public Void visit(IfElse ifElse, Void arg) {
         codeGenerator.comment("\n\t' * IfElse");
-        String elseLabel = codeGenerator.nextLabel();
-        String exitLabel = codeGenerator.nextLabel();
-        ie.getCondition().accept(valueCGVisitor, arg);
-        codeGenerator.jz(elseLabel);
-        for (Statement st : ie.getIfBody()) {
+        int label1 = codeGenerator.getLabels(3);
+        ifElse.getCondition().accept(valueCGVisitor, arg);
+        codeGenerator.jz(label1 + 1);
+        codeGenerator.addLabel(label1);
+        for (Statement st : ifElse.getIfBody()) {
             st.accept(this, arg);
         }
-        codeGenerator.jmp(exitLabel);
-        codeGenerator.addLabel(elseLabel);
-        for (Statement st : ie.getElseBody()) {
+        codeGenerator.jmp(label1 + 2);
+        codeGenerator.addLabel(label1 + 1);
+        for (Statement st : ifElse.getElseBody()) {
             st.accept(this, arg);
         }
-        codeGenerator.addLabel(exitLabel);
+        codeGenerator.addLabel(label1 + 2);
         return null;
     }
 
     /**
-     * execute[[Read: statement -> expression]]():
+     * execute[[Read: stmt -> exp]]():
      *   <' * Read>
-     *   address[[expression]]
-     *   <in>expression.type.suffix()
-     *   <store>expression.type.suffix()
+     *   address[[exp]]
+     *   <in>exp.type.suffix()
+     *   <store>exp.type.suffix()
      */
     @Override
     public Void visit(Read r, Void arg) {
@@ -199,51 +201,51 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[Return: statement -> expression]]():
+     * execute[[Return: stmt -> exp]]():
      *   <' * Return>
-     *   value[[expression]]
+     *   value[[exp]]
      *   <ret> ?, ?, ?
      */
     @Override
-    public Void visit(Return r, Void arg) {
+    public Void visit(Return r, Void arg) { // TODO: This is hardcoded right now
         r.getExpression().accept(valueCGVisitor, arg);
         codeGenerator.ret(0, 0, 0); // TODO: Remove hardcoded
         return null;
     }
 
     /**
-     * execute[[While: statement1 -> exp statement2*]]():
-     *     <' * While>
-     *     condition:
-     *     value[[exp]]
-     *     <jz exit>
-     *     for (Statement st : statement2*) {
-     *         execute[[st]]
-     *     }
-     *     <jmp condition>
-     *     exit:
+     * execute[[While: stmt -> exp stmt2*]]():
+     *   <' * While>
+     *   int label1 = cg.getLabels(2)
+     *   <label>label1<:>
+     *   value[[exp]]
+     *   <jz label>label1 + 1
+     *   for (Statement st : stmt2*) {
+     *       execute[[st]]
+     *   }
+     *   <jmp label>label1
+     *   <label>label1 + 1<:>
      */
     @Override
     public Void visit(While w, Void arg) {
         codeGenerator.comment("\n\t' * While");
-        String conditionLabel = codeGenerator.nextLabel();
-        String exitLabel = codeGenerator.nextLabel();
-        codeGenerator.addLabel(conditionLabel);
+        int label1 = codeGenerator.getLabels(2);
+        codeGenerator.addLabel(label1);
         w.getCondition().accept(valueCGVisitor, arg);
-        codeGenerator.jz(exitLabel);
-        for (Statement st : w.getStatements()) {
-            st.accept(this, arg);
+        codeGenerator.jz(label1 + 1);
+        for (Statement stmt : w.getStatements()) {
+            stmt.accept(this, arg);
         }
-        codeGenerator.jmp(conditionLabel);
-        codeGenerator.addLabel(exitLabel);
+        codeGenerator.jmp(label1);
+        codeGenerator.addLabel(label1 + 1);
         return null;
     }
 
     /**
-     * execute[[Write: statement -> expression]]():
+     * execute[[Write: stmt -> exp]]():
      *   <' * Write>
-     *   value[[expression]]
-     *   <out>expression.type.suffix()
+     *   value[[exp]]
+     *   <out>exp.type.suffix()
      */
     @Override
     public Void visit(Write w, Void arg) {

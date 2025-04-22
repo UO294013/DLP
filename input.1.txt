@@ -1,0 +1,43 @@
+let v:[10]number;
+
+// Main program
+function main(): void {
+	let value: number;
+	let i,j: int;
+	let w: [4][5]int;
+	let date: [
+		let day, month, year:int;		
+	];
+	
+	input date.day; 
+	date.year = ('a' as int); 
+	date.month = date.day * date.year % 12 + 1;
+	log date.day, '\n', date.month, '\n', (date.year as number), '\n';
+	
+	input value;
+		
+	i=0;	
+	while (i < 10) {
+		v[i] = value;
+		log i,':',v[i], ' ';
+		if (i % 2)
+			log 'o','d','d','\n';
+		else
+			log 'e','v','e','n','\n';
+		i = i + 1;
+	}
+	log '\n';
+
+	i = 0 ;
+	while (i < 4) {
+		j = 0;
+		while (j < 5) {
+			w[i][j] = i + j;
+			log w[i][j], ' ';
+			j = j + 1;
+		}
+		log '\n';
+		i=i+1;
+	}
+}
+	

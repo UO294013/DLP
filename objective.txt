@@ -1,11 +1,10 @@
-Generate MAPL code for:
-- Programs
-- Input statements
-- Print statements
-- Literals
-- Variables
-- Assignments
-- Arithmetic, comparison and logical expressions
-- VarDefinitions (global / local)
-- FunDefinitions
-- Casts
+Generate code for:
+- Indexing
+- FieldAccess
+- While statements
+- If statements
+
+Allow in the TypeChecking:
+- 'a' > 'b' -> int
+- 'a' + 'b' -> int
+- -'a' -> int
