@@ -15,6 +15,9 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         this.codeGenerator = cg;
         this.addressCGVisitor = new AddressCGVisitor(cg);
         this.valueCGVisitor = new ValueCGVisitor(cg);
+
+        this.addressCGVisitor.valueCGVisitor = this.valueCGVisitor;
+        this.valueCGVisitor.addressCGVisitor = this.addressCGVisitor;
     }
 
     // PROGRAM
