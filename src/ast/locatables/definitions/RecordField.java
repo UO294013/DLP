@@ -25,7 +25,7 @@ public class RecordField extends AbstractDefinition {
     public String toString() {
         return "RecordField [name=" + super.getName()
                 + ", type=" + super.getType()
-                + ", row=" + row + ", column=" + column + "]";
+                + ", offset=" + offset + "]";
     }
 
     @Override

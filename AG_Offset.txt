@@ -33,9 +33,44 @@ G:
 	(30) VariableDefinition:    definition -> ID type
 	(31) RecordField:           definition -> ID type
 
-A: { type.offset }
+A: { definition.offset, type.size }
 
 R:
-	(X)
-	(X)
-	(X)
+    int globalBytesSum = 0; // Global in OffsetVisitor
+
+	(4) Variable:               expression.definition.offset = globalBytesSum;
+	                            globalBytesSum += expression.definition.type.getSize();
+
+    (21) ArrayType:             type1.size = type2.size * INT_CONSTANT
+
+	(22) CharType:              type.size = 1
+
+	(23) FunctionType:          int paramsBytesSum = 0;
+                                for (int i = variabledefinition*.size() - 1; i >= 0; i--) {
+                                    VariableDefinition vd = variabledefinition*.get(i);
+                                    vd.offset = 4 + paramsBytesSum;
+                                    paramsBytesSum += vd.type.getSize();
+                                }
+
+    (24) IntType:               type.size = 2
+
+	(25) NumberType:            type.size = 4
+
+	(26) RecordType:            int totalSize = 0;
+	                            for (RecordField field : recordfield*){
+                                    totalSize += field.type.getSize();
+                                }
+
+	(27) VoidType:              type.size = 0; // In fact, it's not even assigned
+
+	(29) FunctionDefinition:    int localsBytesSum = 0;
+	                            for (VariableDefinition vd : variabledefinition*) {
+	                                localsBytesSum += vd.type.getSize();
+	                                vd.offset = -localsBytesSum;
+	                            }
+
+	(30) VariableDefinition:    definition.offset = globalBytesSum;
+    	                        globalBytesSum += definition.type.getSize();
+
+	(31) RecordField:           definition.offset = globalBytesSum;
+                                globalBytesSum += definition.type.getSize();

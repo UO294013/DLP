@@ -1,8 +1,6 @@
 package codegen;
 
 import ast.locatables.expressions.*;
-import ast.types.ArrayType;
-import ast.types.ErrorType;
 
 public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
@@ -45,17 +43,6 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     public Void visit(ArrayAccess a, Void arg) {
         a.accept(addressCGVisitor, null);
         codeGenerator.load(a.getType());
-
-        // Checking if the index is valid
-        int size = ((ArrayType) a.getArrayExpression().getType()).getSize();
-        try {
-            if (((IntLiteral) a.getIndexExpression()).getValue() >=  size // TODO: Failing here (getIndexExpression is a Variable and cannot be cast to IntLiteral
-                    || ((IntLiteral) a.getIndexExpression()).getValue() < 0) {
-                new ErrorType("Semantic ERROR: index out of bounds, the size is " + size, a);
-            }
-        } catch (IndexOutOfBoundsException e){
-            e.printStackTrace();
-        }
         return null;
     }
 
