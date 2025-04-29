@@ -1,10 +1,6 @@
 Generate code for:
-- Indexing
-- FieldAccess
-- While statements
-- If statements
+- Function invocations
+- Return statements
 
-Allow in the TypeChecking:
-- 'a' > 'b' -> int
-- 'a' + 'b' -> int
-- -'a' -> int
+CFG-chat:
+https://forms.office.com/e/8f5i4wPrkP
