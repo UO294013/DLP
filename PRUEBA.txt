@@ -1,143 +1,41 @@
 
-#source	"input.1.txt"
+#source	"LAB12.txt"
 
-	' * Array [Size: 10, Type: real] v (offset 0)
 
 ' Invocation to the main function
 call main
 halt
 
 
-#line	4
+#line	2
+
+ p:
+	' * Parameters:
+	' * Local variables:
+	ret 0, 54, 0
+
+
+#line	5
 
  main:
 	' * Parameters:
 	' * Local variables:
-	' * real value (offset -4)
-	' * int i (offset -6)
-	' * int j (offset -8)
-	' * Array [Size: 4, Type: Array [Size: 5, Type: int]] w (offset -48)
-	' * RecordType [fields=[RecordField [name=day, type=int, row=9, column=7], RecordField [name=month, type=int, row=9, column=12], RecordField [name=year, type=int, row=9, column=19]]} date (offset -54)
-	enter	54
+	' * int i (offset -2)
+	enter	2
 
-#line	12
-	' * Read
-	push	bp
-	pushi	-54
-	addi
-	pushi	0
-	addi
-	ini
-	storei
-
-#line	13
+#line	7
 	' * Assignment
 	push	bp
-	pushi	-54
-	addi
-	pushi	4
-	addi
-	pushb	97
-	b2i
-	storei
-
-#line	14
-	' * Assignment
-	push	bp
-	pushi	-54
-	addi
-	pushi	2
-	addi
-	push	bp
-	pushi	-54
+	pushi	-2
 	addi
 	pushi	0
-	addi
-	loadi
-	push	bp
-	pushi	-54
-	addi
-	pushi	4
-	addi
-	loadi
-	muli
-	pushi	12
-	modi
-	pushi	1
-	addi
 	storei
 
-#line	15
+#line	8
 	' * Write
 	push	bp
-	pushi	-54
-	addi
-	pushi	0
+	pushi	-2
 	addi
 	loadi
 	outi
-
-#line	15
-	' * Write
-	pushb	10
-	outb
-
-#line	15
-	' * Write
-	push	bp
-	pushi	-54
-	addi
-	pushi	2
-	addi
-	loadi
-	outi
-
-#line	15
-	' * Write
-	pushb	10
-	outb
-
-#line	15
-	' * Write
-	push	bp
-	pushi	-54
-	addi
-	pushi	4
-	addi
-	loadi
-	i2f
-	outf
-
-#line	15
-	' * Write
-	pushb	10
-	outb
-
-#line	17
-	' * Read
-	push	bp
-	pushi	-4
-	addi
-	inf
-	storef
-
-#line	19
-	' * Assignment
-	push	bp
-	pushi	-6
-	addi
-	pushi	0
-	storei
-
-#line	20
-	' * While
-label1:
-	push	bp
-	pushi	-6
-	addi
-	loadi
-	pushi	10
-	lti
-	jz	label2
-	' * Assignment
-	pusha	0
+	ret 0, 54, 0

@@ -1,0 +1,9 @@
+
+function p(): int {
+}
+
+function main(): void{
+	let i:int;
+	i=0;
+	log i;
+}

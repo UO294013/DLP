@@ -147,6 +147,15 @@ public class CodeGenerator {
         }
     }
 
+    public void pop(Type type) {
+        try {
+            out.write("\n\tpop" + type.suffix());
+            out.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void addi() {
         try {
             out.write("\n\taddi");
@@ -174,9 +183,9 @@ public class CodeGenerator {
         }
     }
 
-    public void ret(int bytesToReturn, int bytesOfLocalVariables, int bytesOfArgs) {
+    public void ret(int bytesToReturn, int bytesOfLocals, int bytesOfParams) {
         try {
-            out.write("\n\tret " + bytesToReturn + ", " + bytesOfLocalVariables + ", " + bytesOfArgs);
+            out.write("\n\tret " + bytesToReturn + ", " + bytesOfLocals + ", " + bytesOfParams);
             out.write("\n");
             out.flush();
         } catch (IOException e){

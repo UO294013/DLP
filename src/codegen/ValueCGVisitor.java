@@ -104,8 +104,8 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * value[[FieldAccess: exp1 -> exp2 ID]]():
-     *     address[[exp1]]
-     *     <load> exp1.type.suffix()
+     *   address[[exp1]]
+     *   <load> exp1.type.suffix()
      */
     @Override
     public Void visit(FieldAccess f, Void arg) {
@@ -115,11 +115,11 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * value[[FunctionCall: statement -> ID expression*]]():
-     *     for (Expression exp : expression*) {
-     *         value[[exp]]
-     *     }
-     *     <call> ID
+     * value[[FunctionCall: exp1 -> exp2 exp3*]]():
+     *   for (Expression ex : exp3*) {
+     *       value[[ex]]
+     *   }
+     *   <call> exp2
      */
     @Override
     public Void visit(FunctionCall f, Void arg) {

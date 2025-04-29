@@ -3,8 +3,10 @@ package codegen;
 import ast.Program;
 import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.*;
+import ast.locatables.expressions.FunctionCall;
 import ast.statements.*;
 import ast.types.FunctionType;
+import ast.types.VoidType;
 
 public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
@@ -70,41 +72,53 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[FunctionDefinition: definition -> ID varDefinition* type varDefinition* stmt*]]():
+     * execute[[FunctionDefinition: definition -> ID type varDefinition* stmt*]]():
      *   ID<:>
+     *   int bytesOfLocals = varDefinition*.forEach(vardef -> bytesOfLocals += vardef.type.getSize());
+     *   <enter> bytesOfLocals
      *   <' * Parameters:>
-     *   execute[[type]]
+     *   int bytesOfParams = execute[[type]] // FunctionType -> Contains the parameters
+     *   int bytesToReturn = definition.type.getSize();
      *   <' * Local variables:>
      *   for (VariableDefinition vd : varDefinition*) {
      *       execute[[vd]]
      *   }
      *   for (Statement stmt : stmt*) {
      *     cg.line(stmt.getLine())
-     *     execute[[stmt]]
+     *     execute[[stmt]](bytesOfLocals, bytesOfParams, bytesToReturn)
      *   }
      *   if (varDefinition*.size() > 0) {
      *     <enter> -varDefinition*.get(varDefinition*.size() - 1).offset
      *   }
+     *   if (bytesToReturn == 0) {
+     *     <ret> bytesToReturn <, > bytesOfLocals <, > bytesOfParams
+     *   }
      */
     @Override
-    public Void visit(FunctionDefinition vd, Void arg) {
-        codeGenerator.line(vd.getLine());
-        codeGenerator.comment("\n\n " + vd.getName() + ":");
+    public Void visit(FunctionDefinition fd, Void arg) {
+        int bytesOfLocals = 0;
+        int bytesOfParams = 0;
+        codeGenerator.line(fd.getLine());
+        codeGenerator.comment("\n\n " + fd.getName() + ":");
         codeGenerator.comment("\n\t' * Parameters:");
-        vd.getType().accept(this, arg);
+        fd.getType().accept(this, arg);
+        int bytesToReturn = fd.getType().getSize(); // ret a, b, c -> Setting the 'c'
         codeGenerator.comment("\n\t' * Local variables:");
-        for (VariableDefinition varDef : vd.getVariableDefinitions()) {
+        for (VariableDefinition varDef : fd.getVariableDefinitions()) {
             varDef.accept(this, arg);
+            bytesOfLocals += varDef.getType().getSize(); // ret a, b, c -> Setting the 'a'
         }
-        if (!vd.getVariableDefinitions().isEmpty()) {
-            int enterValue = -vd.getVariableDefinitions().getLast().offset;
+        if (!fd.getVariableDefinitions().isEmpty()) {
+            int enterValue = -fd.getVariableDefinitions().getLast().offset;
             codeGenerator.enter(enterValue);
         }
-        for (Statement stmt : vd.getStatements()) {
+        for (Statement stmt : fd.getStatements()) {
             codeGenerator.line(stmt.getLine());
             stmt.accept(this, arg);
         }
-        codeGenerator.ret(0, 54, 0); // TODO: Remove hardcoded
+        if (bytesToReturn == 0) {
+            codeGenerator.ret(bytesToReturn, bytesOfLocals, bytesOfParams);
+        }
         return null;
     }
 
@@ -137,10 +151,10 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * execute[[Assignment: stmt -> exp1 exp2]]():
-     *     <' * Assignment>
-     *     address[[exp1]]
-     *     value[[exp2]]
-     *     <store>exp1.type.suffix()
+     *   <' * Assignment>
+     *   address[[exp1]]
+     *   value[[exp2]]
+     *   <store>exp1.type.suffix()
      */
     @Override
     public Void visit(Assignment a, Void arg) {
@@ -148,6 +162,24 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         a.getLExp().accept(addressCGVisitor, arg);
         a.getRExp().accept(valueCGVisitor, arg);
         codeGenerator.store(a.getLExp().getType());
+        return null;
+    }
+
+    /**
+     * execute[[FunctionCall: stmt -> exp1 exp2*]]():
+     *   for (Expression ex : exp2*) {
+     *      value[[ex]]
+     *   }
+     *   if (!stmt.type instanceof VoidType) {
+     *      <pop>stmt.type.suffix()
+     *   }
+     */
+    @Override
+    public Void visit(FunctionCall f, Void arg) {
+        f.accept(valueCGVisitor, arg);
+        if (!(f.getType() instanceof VoidType)) {
+            codeGenerator.pop(f.getType()); // TODO: Check if it is the type of the exp1
+        }
         return null;
     }
 
@@ -206,15 +238,16 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[Return: stmt -> exp]]():
+     * execute[[Return: stmt -> exp]](int bytesOfLocals, int bytesOfParams, int bytesToReturn):
      *   <' * Return>
      *   value[[exp]]
-     *   <ret> ?, ?, ?
+     *   <ret> bytesToReturn <, > bytesOfLocals <, > bytesOfParams
      */
     @Override
-    public Void visit(Return r, Void arg) { // TODO: This is hardcoded right now
+    public Void visit(Return r, Void arg) {
+        codeGenerator.comment("\n\t' * Return");
         r.getExpression().accept(valueCGVisitor, arg);
-        codeGenerator.ret(0, 0, 0); // TODO: Remove hardcoded
+        codeGenerator.ret(0, 0, 0);
         return null;
     }
 
