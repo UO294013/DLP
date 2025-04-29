@@ -15,6 +15,9 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         this.codeGenerator = cg;
         this.addressCGVisitor = new AddressCGVisitor(cg);
         this.valueCGVisitor = new ValueCGVisitor(cg);
+
+        this.addressCGVisitor.valueCGVisitor = this.valueCGVisitor;
+        this.valueCGVisitor.addressCGVisitor = this.addressCGVisitor;
     }
 
     // PROGRAM
@@ -57,7 +60,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      *  execute[[VarDefinition: varDefinition → type ID]]():
-     *    <' *> type.toString() ID <(offset> varDefinition.type.offset  <)>
+     *    <' *> type.toString() ID <(offset> varDefinition.type.offset<)>
      */
     @Override
     public Void visit(VariableDefinition vd, Void arg) {
@@ -101,7 +104,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
             codeGenerator.line(stmt.getLine());
             stmt.accept(this, arg);
         }
-        codeGenerator.ret(0, 4, 0); // TODO: Remove hardcoded
+        codeGenerator.ret(0, 54, 0); // TODO: Remove hardcoded
         return null;
     }
 
@@ -121,7 +124,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * execute[[RecordField: definition -> ID type]]():
-     *   <' *> type.toString() ID <(offset> varDefinition.type.offset  <)>
+     *   <' *> type.toString() ID <(offset> varDefinition.type.offset<)>
      */
     @Override
     public Void visit(RecordField rf, Void arg) {
@@ -153,8 +156,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   <' * IfElse>
      *   int label1 = cg.getLabels(3)
      *   value[[exp]]
-     *   <jz label>label1 + 1
-     *   <label>label1<:>
+     *   <jz label>label1
      *   for (Statement st : stmt2*) {
      *       execute[[st]]
      *   }
@@ -168,19 +170,22 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     @Override
     public Void visit(IfElse ifElse, Void arg) {
         codeGenerator.comment("\n\t' * IfElse");
-        int label1 = codeGenerator.getLabels(3);
+        int label1 = codeGenerator.getLabels(2);
         ifElse.getCondition().accept(valueCGVisitor, arg);
-        codeGenerator.jz(label1 + 1);
-        codeGenerator.addLabel(label1);
+        codeGenerator.jz(label1); // Jump to else if condition false
+        codeGenerator.comment("\n\t' * If body");
         for (Statement st : ifElse.getIfBody()) {
+            codeGenerator.line(st.getLine());
             st.accept(this, arg);
         }
-        codeGenerator.jmp(label1 + 2);
-        codeGenerator.addLabel(label1 + 1);
+        codeGenerator.jmp(label1 + 1);
+        codeGenerator.addLabel(label1); // Else
+        codeGenerator.comment("\n\t' * Else body");
         for (Statement st : ifElse.getElseBody()) {
+            codeGenerator.line(st.getLine());
             st.accept(this, arg);
         }
-        codeGenerator.addLabel(label1 + 2);
+        codeGenerator.addLabel(label1 + 1);
         return null;
     }
 
@@ -233,7 +238,9 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         codeGenerator.addLabel(label1);
         w.getCondition().accept(valueCGVisitor, arg);
         codeGenerator.jz(label1 + 1);
+        codeGenerator.comment("\n\t' * While body");
         for (Statement stmt : w.getStatements()) {
+            codeGenerator.line(stmt.getLine());
             stmt.accept(this, arg);
         }
         codeGenerator.jmp(label1);
