@@ -22,227 +22,103 @@ public class CodeGenerator {
     // Low-level instructions:
 
     public void load(Type type) {
-        try {
-            out.write("\n\tload" + type.suffix());
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        template("\n\tload" + type.suffix());
     }
 
     public void store(Type type) {
-        try {
-            out.write("\n\tstore" + type.suffix());
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        template("\n\tstore" + type.suffix());
     }
 
     public void enter(int enterValue) {
-        try {
-            out.write("\n\tenter\t" + enterValue);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        template("\n\tenter\t" + enterValue);
     }
 
     public void jmp(int labelNum) {
-        try {
-            out.write("\n\tjmp\tlabel" + labelNum);
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tjmp\tlabel" + labelNum);
     }
 
     public void jz(int labelNum) {
-        try {
-            out.write("\n\tjz\tlabel" + labelNum);
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tjz\tlabel" + labelNum);
     }
 
     public void jnz(int labelNum) {
-        try {
-            out.write("\n\tjnz\tlabel" + labelNum);
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tjnz\tlabel" + labelNum);
     }
 
     public void in(Type type) {
-        try {
-            out.write("\n\tin" + type.suffix());
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tin" + type.suffix());
     }
 
     public void out(Type type) {
-        try {
-            out.write("\n\tout" + type.suffix());
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tout" + type.suffix());
     }
 
     public void pusha(int offset) {
-        try {
-            out.write("\n\tpusha\t" + offset);
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tpusha\t" + offset);
     }
 
     public void pushBP(){
-        try {
-            out.write("\n\tpush\tbp");
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tpush\tbp");
     }
 
     public void pushi(int val) {
-        try {
-            out.write("\n\tpushi\t" + val);
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tpushi\t" + val);
     }
 
     public void pushb(char value) {
-        try {
-            out.write("\n\tpushb\t" + (int) value);
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tpushb\t" + (int) value);
     }
 
     public void pushf(double value) {
-        try {
-            out.write("\n\tpushf\t" + value);
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tpushf\t" + value);
     }
 
     public void push(Type type, int value) {
-        try {
-            out.write("\n\tpush" + type.suffix() + "\t" + value);
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tpush" + type.suffix() + "\t" + value);
     }
 
     public void pop(Type type) {
-        try {
-            out.write("\n\tpop" + type.suffix());
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tpop" + type.suffix());
     }
 
     public void addi() {
-        try {
-            out.write("\n\taddi");
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\taddi");
     }
 
     public void muli() {
-        try {
-            out.write("\n\tmuli");
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tmuli");
     }
 
     public void sub(Type type) {
-        try {
-            out.write("\n\tsub" + type.suffix());
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tsub" + type.suffix());
     }
 
     public void ret(int bytesToReturn, int bytesOfLocals, int bytesOfParams) {
-        try {
-            out.write("\n\tret " + bytesToReturn + ", " + bytesOfLocals + ", " + bytesOfParams);
-            out.write("\n");
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\n\tret " + bytesToReturn + ", " + bytesOfLocals + ", " + bytesOfParams + "\n");
     }
 
     // Call to main and halt:
 
     public void callMain() {
-        try {
-            out.write("\n");
-            out.write("\n' Invocation to the main function");
-            out.write("\ncall main");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        template("\n\n' Invocation to the main function\ncall main");
     }
 
     public void halt() {
-        try {
-            out.write("\nhalt");
-            out.write("\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        template("\nhalt\n");
     }
 
     // Directives (#) and Comments (' *):
 
     public void line(int lineNumber) {
-        try {
-            out.write("\n");
-            out.write("\n#line\t" + lineNumber);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        template("\n\n#line\t" + lineNumber);
     }
 
     public void source(String inputFileName) {
-        try {
-            out.write("\n#source\t\"" + inputFileName + "\"");
-            out.write("\n");
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        template("\n#source\t\"" + inputFileName + "\"\n");
     }
 
     public void comment(String s) {
-        try {
-            out.write(s);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        template(s);
     }
 
     // Utility methods:
@@ -259,21 +135,11 @@ public class CodeGenerator {
     }
 
     public void addLabel(int labelNum) {
-        try {
-            out.write("\nlabel" + labelNum + ":");
-            out.flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        template("\nlabel" + labelNum + ":");
     }
 
     public void call(String funcName) {
-        try {
-            out.write("\n\tcall\t" + funcName);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        template("\n\tcall\t" + funcName);
     }
 
     /**
@@ -284,21 +150,14 @@ public class CodeGenerator {
      *     i2b -> Transforms an int into a char
      */
     public void convertTo(Type operandType, Type resultType) {
-        try {
-            if (!resultType.suffix().equals(operandType.suffix())) {
-                if (resultType.suffix().equals("b") && operandType.suffix().equals("f")) {
-                    out.write("\n\tf2i");
-                    out.write("\n\ti2b");
-                } else if (resultType.suffix().equals("f") && operandType.suffix().equals("b")) {
-                    out.write("\n\tb2i");
-                    out.write("\n\ti2f");
-                } else {
-                    out.write("\n\t" + operandType.suffix() + "2" + resultType.suffix());
-                }
-                out.flush();
+        if (!resultType.suffix().equals(operandType.suffix())) {
+            if (resultType.suffix().equals("b") && operandType.suffix().equals("f")) {
+                template("\n\tf2i\n\ti2b");
+            } else if (resultType.suffix().equals("f") && operandType.suffix().equals("b")) {
+                template("\n\tb2i\n\ti2f");
+            } else {
+                template("\n\t" + operandType.suffix() + "2" + resultType.suffix());
             }
-        } catch (IOException e){
-            e.printStackTrace();
         }
     }
 
@@ -311,26 +170,22 @@ public class CodeGenerator {
      *     % -> Modulus
      */
     public void arithmetic(String operator, Type type) {
-        try {
-            switch (operator) {
-                case "+":
-                    out.write("\n\tadd" + type.suffix());
-                    break;
-                case "-":
-                    out.write("\n\tsub" + type.suffix());
-                    break;
-                case "*":
-                    out.write("\n\tmul" + type.suffix());
-                    break;
-                case "/":
-                    out.write("\n\tdiv" + type.suffix());
-                    break;
-                case "%":
-                    out.write("\n\tmod" + type.suffix());
-                    break;
-            }
-        } catch (IOException e){
-            e.printStackTrace();
+        switch (operator) {
+            case "+":
+                template("\n\tadd" + type.suffix());
+                break;
+            case "-":
+                template("\n\tsub" + type.suffix());
+                break;
+            case "*":
+                template("\n\tmul" + type.suffix());
+                break;
+            case "/":
+                template("\n\tdiv" + type.suffix());
+                break;
+            case "%":
+                template("\n\tmod" + type.suffix());
+                break;
         }
     }
 
@@ -344,29 +199,25 @@ public class CodeGenerator {
      *     != -> Different
      */
     public void comparison(String operator, Type type) {
-        try {
-            switch (operator) {
-                case ">":
-                    out.write("\n\tgt" + type.suffix());
-                    break;
-                case ">=":
-                    out.write("\n\tge" + type.suffix());
-                    break;
-                case "<":
-                    out.write("\n\tlt" + type.suffix());
-                    break;
-                case "<=":
-                    out.write("\n\tle" + type.suffix());
-                    break;
-                case "==":
-                    out.write("\n\teq" + type.suffix());
-                    break;
-                case "!=":
-                    out.write("\n\tne" + type.suffix());
-                    break;
-            }
-        } catch (IOException e){
-            e.printStackTrace();
+        switch (operator) {
+            case ">":
+                template("\n\tgt" + type.suffix());
+                break;
+            case ">=":
+                template("\n\tge" + type.suffix());
+                break;
+            case "<":
+                template("\n\tlt" + type.suffix());
+                break;
+            case "<=":
+                template("\n\tle" + type.suffix());
+                break;
+            case "==":
+                template("\n\teq" + type.suffix());
+                break;
+            case "!=":
+                template("\n\tne" + type.suffix());
+                break;
         }
     }
 
@@ -376,17 +227,13 @@ public class CodeGenerator {
      *     || -> Logic OR
      */
     public void logic(String operator) {
-        try {
-            switch (operator) {
-                case "&&":
-                    out.write("\n\tand");
-                    break;
-                case "||":
-                    out.write("\n\tor");
-                    break;
-            }
-        } catch (IOException e){
-            e.printStackTrace();
+        switch (operator) {
+            case "&&":
+                template("\n\tand");
+                break;
+            case "||":
+                template("\n\tor");
+                break;
         }
     }
 
@@ -395,8 +242,13 @@ public class CodeGenerator {
      *     !  -> Unary logic NOT
      */
     public void not() {
+        template("\n\tnot");
+    }
+
+    // Template to avoid code repetition:
+    public void template(String instructions) {
         try {
-            out.write("\n\tnot");
+            out.write(instructions);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();

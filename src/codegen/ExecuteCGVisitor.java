@@ -101,7 +101,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         codeGenerator.line(fd.getLine());
         codeGenerator.comment("\n\n " + fd.getName() + ":");
         codeGenerator.comment("\n\t' * Parameters:");
-        fd.getType().accept(this, arg);
+        fd.getType().accept(this, arg); // TODO: FunctionType sets bytesOfParams
         int bytesToReturn = fd.getType().getSize(); // ret a, b, c -> Setting the 'c'
         codeGenerator.comment("\n\t' * Local variables:");
         for (VariableDefinition varDef : fd.getVariableDefinitions()) {
@@ -129,7 +129,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *     }
      */
     @Override
-    public Void visit(FunctionType f, Void arg) {
+    public Void visit(FunctionType f, Void arg) { // TODO: bytesOfParams?
         for (VariableDefinition vd : f.getParameters()) {
             vd.accept(this, arg);
         }
@@ -247,7 +247,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     public Void visit(Return r, Void arg) {
         codeGenerator.comment("\n\t' * Return");
         r.getExpression().accept(valueCGVisitor, arg);
-        codeGenerator.ret(0, 0, 0);
+        codeGenerator.ret(0, 0, 0); // TODO: Remove hardcoded
         return null;
     }
 
