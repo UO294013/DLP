@@ -3,12 +3,13 @@ package codegen;
 import ast.Program;
 import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.*;
+import ast.locatables.expressions.Expression;
 import ast.locatables.expressions.FunctionCall;
 import ast.statements.*;
 import ast.types.FunctionType;
 import ast.types.VoidType;
 
-public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
+public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void> {
 
     public AddressCGVisitor addressCGVisitor;
     public ValueCGVisitor valueCGVisitor;
@@ -26,22 +27,22 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * execute[[Program: program -> definition*]]():
-     *   // ' * Global variables:
+     *   // <' * Global variables:>
      *   for (Definition def : definition*) {
      * 	   if (def instanceof VariableDefinition) {
-     * 	     execute[[def]]()
+     * 	     execute[[def]]
      * 	   }
      * 	 }
      *   <call main>
      *   <halt>
      *   for (Definition def : definition*) {
      * 	   if (def instanceof FunctionDefinition) {
-     * 	     execute[[def]]()
+     * 	     execute[[def]]
      * 	   }
      *   }
      */
     @Override
-    public Void visit(Program p, Void arg) {
+    public Void visit(Program p, FunctionDefinition arg) {
         // codeGenerator.comment("\n' * " + "Global variables:");
         for (Definition def : p.getDefinitions()) {
             if (def instanceof VariableDefinition) {
@@ -65,7 +66,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *    <' *> type.toString() ID <(offset> varDefinition.type.offset<)>
      */
     @Override
-    public Void visit(VariableDefinition vd, Void arg) {
+    public Void visit(VariableDefinition vd, FunctionDefinition arg) {
         codeGenerator.comment("\n\t' * " + vd.getType().toString() + " " + vd.getName()
                 + " (offset " + vd.offset + ")");
         return null;
@@ -89,36 +90,36 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *     execute[[stmt]] // (bytesOfLocals, bytesOfParams, bytesToReturn)
      *   }
      *   if (type.returnType instanceOf VoidType) {
-     *     <ret> bytesToReturn <, > bytesOfLocals <, > bytesOfParams
+     *     <ret> 0 <, > bytesOfLocals <, > bytesOfParams
      *   }
      */
     @Override
-    public Void visit(FunctionDefinition fd, Void arg) {
+    public Void visit(FunctionDefinition fd, FunctionDefinition arg) {
         codeGenerator.line(fd.getLine());
         codeGenerator.comment("\n\n " + fd.getName() + ":");
         codeGenerator.comment("\n\t' * Local variables:");
         for (VariableDefinition varDef : fd.getVariableDefinitions()) {
-            varDef.accept(this, arg);
+            varDef.accept(this, fd);
         }
         // ret a, b, c -> Setting the 'b' (bytesOfLocals)
-        int bytesOfLocals = fd.getVariableDefinitions().isEmpty() ? 0 : -fd.getVariableDefinitions().getLast().offset;
-        codeGenerator.enter(bytesOfLocals);
+        fd.bytesOfLocals = fd.getVariableDefinitions().isEmpty() ? 0 : -fd.getVariableDefinitions().getLast().offset;
+        codeGenerator.enter(fd.bytesOfLocals);
 
         codeGenerator.comment("\n\t' * Parameters:");
         // ret a, b, c -> Setting the 'c' (bytesOfParams)
-        int bytesOfParams = ((FunctionType) fd.getType()).getParameters().stream().mapToInt(param ->
+        fd.bytesOfParams = ((FunctionType) fd.getType()).getParameters().stream().mapToInt(param ->
                 param.getType().getSize()).sum();
-        fd.getType().accept(this, arg);
+        fd.getType().accept(this, fd);
 
         // ret a, b, c -> Setting the 'a' (bytesToReturn)
-        int bytesToReturn = fd.getType().getSize();
+        fd.bytesToReturn = fd.getType().getSize();
 
         for (Statement stmt : fd.getStatements()) {
             codeGenerator.line(stmt.getLine());
-            stmt.accept(this, arg);
+            stmt.accept(this, fd);
         }
         if (((FunctionType) fd.getType()).returnType instanceof VoidType) {
-            codeGenerator.ret(bytesToReturn, bytesOfLocals, bytesOfParams);
+            codeGenerator.ret(0, fd.bytesOfLocals, fd.bytesOfParams);
         }
         return null;
     }
@@ -130,7 +131,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *     }
      */
     @Override
-    public Void visit(FunctionType f, Void arg) {
+    public Void visit(FunctionType f, FunctionDefinition arg) {
         for (VariableDefinition vd : f.getParameters()) {
             vd.accept(this, arg);
         }
@@ -142,7 +143,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   <' *> type.toString() ID <(offset> varDefinition.type.offset<)>
      */
     @Override
-    public Void visit(RecordField rf, Void arg) {
+    public Void visit(RecordField rf, FunctionDefinition arg) {
         codeGenerator.comment("\n\t' * " + rf.getType().toString() + " " + rf.getName()
                 + " (offset " + rf.offset + ")");
         return null;
@@ -158,10 +159,10 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   <store>exp1.type.suffix()
      */
     @Override
-    public Void visit(Assignment a, Void arg) {
+    public Void visit(Assignment a, FunctionDefinition arg) {
         codeGenerator.comment("\n\t' * Assignment");
-        a.getLExp().accept(addressCGVisitor, arg);
-        a.getRExp().accept(valueCGVisitor, arg);
+        a.getLExp().accept(addressCGVisitor, null);
+        a.getRExp().accept(valueCGVisitor, null);
         codeGenerator.store(a.getLExp().getType());
         return null;
     }
@@ -171,15 +172,20 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   for (Expression ex : exp2*) {
      *      value[[ex]]
      *   }
-     *   if (!stmt.type instanceof VoidType) {
-     *      <pop>stmt.type.suffix()
+     *   <call> exp1.getName()
+     *   if (!(stmt.type.returnType instanceof VoidType)) {
+     *      <pop>stmt.type.returnType.suffix()
      *   }
      */
     @Override
-    public Void visit(FunctionCall f, Void arg) {
-        f.accept(valueCGVisitor, arg);
-        if (!(f.getType() instanceof VoidType)) {
-            codeGenerator.pop(f.getType()); // TODO: Check if it is the type of the exp1
+    public Void visit(FunctionCall f, FunctionDefinition arg) {
+        for (Expression ex : f.getArguments()) {
+            ex.accept(valueCGVisitor, null);
+        }
+        codeGenerator.call(f.getFunctionName().getName());
+        f.accept(valueCGVisitor, null);
+        if (!(((FunctionType) f.getType()).returnType instanceof VoidType)) {
+            codeGenerator.pop(((FunctionType) f.getType()).returnType);
         }
         return null;
     }
@@ -201,10 +207,10 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   <label>label1 + 2<:>
      */
     @Override
-    public Void visit(IfElse ifElse, Void arg) {
+    public Void visit(IfElse ifElse, FunctionDefinition arg) {
         codeGenerator.comment("\n\t' * IfElse");
         int label1 = codeGenerator.getLabels(2);
-        ifElse.getCondition().accept(valueCGVisitor, arg);
+        ifElse.getCondition().accept(valueCGVisitor, null);
         codeGenerator.jz(label1); // Jump to else if condition false
         codeGenerator.comment("\n\t' * If body");
         for (Statement st : ifElse.getIfBody()) {
@@ -230,9 +236,9 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   <store>exp.type.suffix()
      */
     @Override
-    public Void visit(Read r, Void arg) {
+    public Void visit(Read r, FunctionDefinition arg) {
         codeGenerator.comment("\n\t' * Read");
-        r.getExpression().accept(addressCGVisitor, arg);
+        r.getExpression().accept(addressCGVisitor, null);
         codeGenerator.in(r.getExpression().getType());
         codeGenerator.store(r.getExpression().getType());
         return null;
@@ -245,10 +251,10 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   <ret> bytesToReturn <, > bytesOfLocals <, > bytesOfParams
      */
     @Override
-    public Void visit(Return r, Void arg) {
+    public Void visit(Return r, FunctionDefinition fd) {
         codeGenerator.comment("\n\t' * Return");
-        r.getExpression().accept(valueCGVisitor, arg);
-        codeGenerator.ret(0, 0, 0); // TODO: Remove hardcoded
+        r.getExpression().accept(valueCGVisitor, null);
+        codeGenerator.ret(fd.bytesToReturn, fd.bytesOfLocals, fd.bytesToReturn);
         return null;
     }
 
@@ -266,11 +272,11 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   <label>label1 + 1<:>
      */
     @Override
-    public Void visit(While w, Void arg) {
+    public Void visit(While w, FunctionDefinition arg) {
         codeGenerator.comment("\n\t' * While");
         int label1 = codeGenerator.getLabels(2);
         codeGenerator.addLabel(label1);
-        w.getCondition().accept(valueCGVisitor, arg);
+        w.getCondition().accept(valueCGVisitor, null);
         codeGenerator.jz(label1 + 1);
         codeGenerator.comment("\n\t' * While body");
         for (Statement stmt : w.getStatements()) {
@@ -289,9 +295,9 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *   <out>exp.type.suffix()
      */
     @Override
-    public Void visit(Write w, Void arg) {
+    public Void visit(Write w, FunctionDefinition arg) {
         codeGenerator.comment("\n\t' * Write");
-        w.getExpression().accept(valueCGVisitor, arg);
+        w.getExpression().accept(valueCGVisitor, null);
         codeGenerator.out(w.getExpression().getType());
         return null;
     }

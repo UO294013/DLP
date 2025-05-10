@@ -123,11 +123,12 @@ public class CodeGenerator {
 
     // Utility methods:
 
+    /* Alternative to getLabels()
     public String nextLabel() {
         return "label" + this.labels++;
     }
+    */
 
-    /* This could be used as well to create all the labels for a method at the same time */
     public int getLabels(int size) {
         int temp = labels;
         labels += size;
