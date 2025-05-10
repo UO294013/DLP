@@ -11,7 +11,6 @@ public class FunctionDefinition extends AbstractDefinition {
     public List<VariableDefinition> variableDefinitions;
     public List<Statement> statements;
     public int bytesOfLocals;
-    public int bytesOfParams;
     public int bytesToReturn;
 
     public FunctionDefinition(String functionName, Type type, List<VariableDefinition> varDefs, List<Statement> statements, int row, int column) {

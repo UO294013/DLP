@@ -25,6 +25,9 @@ public class OffsetVisitor extends AbstractVisitor<Void, Void> {
     public Void visit(Program p, Void arg) {
         for (Definition d : p.getDefinitions()) {
             d.accept(this, arg);
+            if (d.getType() instanceof RecordType) {
+                ((RecordType) d.getType()).accept(this, arg);
+            }
         }
         return null;
     }

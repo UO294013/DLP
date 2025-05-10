@@ -95,8 +95,16 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
      */
     @Override
     public Void visit(FunctionDefinition fd, FunctionDefinition arg) {
+        FunctionType funcType = ((FunctionType) fd.getType());
         codeGenerator.line(fd.getLine());
         codeGenerator.comment("\n\n " + fd.getName() + ":");
+
+        codeGenerator.comment("\n\t' * Parameters:");
+        // ret a, b, c -> Setting the 'c' (bytesOfParams)
+        funcType.bytesOfParams = funcType.getParameters().stream().mapToInt(
+                param -> param.getType().getSize()).sum();
+        fd.getType().accept(this, fd);
+
         codeGenerator.comment("\n\t' * Local variables:");
         for (VariableDefinition varDef : fd.getVariableDefinitions()) {
             varDef.accept(this, fd);
@@ -105,21 +113,15 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
         fd.bytesOfLocals = fd.getVariableDefinitions().isEmpty() ? 0 : -fd.getVariableDefinitions().getLast().offset;
         codeGenerator.enter(fd.bytesOfLocals);
 
-        codeGenerator.comment("\n\t' * Parameters:");
-        // ret a, b, c -> Setting the 'c' (bytesOfParams)
-        fd.bytesOfParams = ((FunctionType) fd.getType()).getParameters().stream().mapToInt(param ->
-                param.getType().getSize()).sum();
-        fd.getType().accept(this, fd);
-
         // ret a, b, c -> Setting the 'a' (bytesToReturn)
-        fd.bytesToReturn = fd.getType().getSize();
+        fd.bytesToReturn = funcType.returnType.getSize();
 
         for (Statement stmt : fd.getStatements()) {
             codeGenerator.line(stmt.getLine());
             stmt.accept(this, fd);
         }
-        if (((FunctionType) fd.getType()).returnType instanceof VoidType) {
-            codeGenerator.ret(0, fd.bytesOfLocals, fd.bytesOfParams);
+        if (funcType.returnType instanceof VoidType) {
+            codeGenerator.ret(0, fd.bytesOfLocals, funcType.bytesOfParams);
         }
         return null;
     }
@@ -169,23 +171,16 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
 
     /**
      * execute[[FunctionCall: stmt -> exp1 exp2*]]():
-     *   for (Expression ex : exp2*) {
-     *      value[[ex]]
-     *   }
-     *   <call> exp1.getName()
+     *   value[[stmt]]
      *   if (!(stmt.type.returnType instanceof VoidType)) {
      *      <pop>stmt.type.returnType.suffix()
      *   }
      */
     @Override
     public Void visit(FunctionCall f, FunctionDefinition arg) {
-        for (Expression ex : f.getArguments()) {
-            ex.accept(valueCGVisitor, null);
-        }
-        codeGenerator.call(f.getFunctionName().getName());
         f.accept(valueCGVisitor, null);
-        if (!(((FunctionType) f.getType()).returnType instanceof VoidType)) {
-            codeGenerator.pop(((FunctionType) f.getType()).returnType);
+        if (!(f.getType() instanceof VoidType)) {
+            codeGenerator.pop(f.getType());
         }
         return null;
     }
@@ -254,7 +249,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
     public Void visit(Return r, FunctionDefinition fd) {
         codeGenerator.comment("\n\t' * Return");
         r.getExpression().accept(valueCGVisitor, null);
-        codeGenerator.ret(fd.bytesToReturn, fd.bytesOfLocals, fd.bytesToReturn);
+        codeGenerator.ret(fd.bytesToReturn, fd.bytesOfLocals, ((FunctionType) fd.getType()).bytesOfParams);
         return null;
     }
 

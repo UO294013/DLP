@@ -11,7 +11,6 @@ halt
 #line	4
 
  main:
-	' * Parameters:
 	' * Local variables:
 	' * real value (offset -4)
 	' * int i (offset -6)
@@ -19,6 +18,7 @@ halt
 	' * Array [Size: 4, Type: Array [Size: 5, Type: int]] w (offset -48)
 	' * RecordType [fields=[RecordField [name=day, type=int, offset=0], RecordField [name=month, type=int, offset=2], RecordField [name=year, type=int, offset=4]]} date (offset -54)
 	enter	54
+	' * Parameters:
 
 #line	12
 	' * Read

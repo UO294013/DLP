@@ -41,9 +41,8 @@ public class CodeGenerator {
         template("\n\tjz\tlabel" + labelNum);
     }
 
-    public void jnz(int labelNum) {
-        template("\n\tjnz\tlabel" + labelNum);
-    }
+    // Not used (could be used for do-while structures)
+    /* public void jnz(int labelNum) { template("\n\tjnz\tlabel" + labelNum); } */
 
     public void in(Type type) {
         template("\n\tin" + type.suffix());
@@ -94,7 +93,7 @@ public class CodeGenerator {
     }
 
     public void ret(int bytesToReturn, int bytesOfLocals, int bytesOfParams) {
-        template("\n\tret " + bytesToReturn + ", " + bytesOfLocals + ", " + bytesOfParams + "\n");
+        template("\n\tret " + bytesToReturn + ", " + bytesOfLocals + ", " + bytesOfParams);
     }
 
     // Call to main and halt:

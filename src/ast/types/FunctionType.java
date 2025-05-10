@@ -10,6 +10,7 @@ public class FunctionType extends AbstractType {
 
     public Type returnType;
     public List<VariableDefinition> parameters;
+    public int bytesOfParams;
 
     public FunctionType(List<VariableDefinition> params, Type returnType) {
         this.parameters = params;
@@ -38,6 +39,11 @@ public class FunctionType extends AbstractType {
             types.get(i).mustPromoteTo(parameters.get(i).getType(), l);
         }
         return this.returnType;
+    }
+
+    @Override
+    public int getSize() {
+        return bytesOfParams;
     }
 
     @Override

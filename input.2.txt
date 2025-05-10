@@ -21,7 +21,7 @@ function f(r:number, e:int):int {
 
 let matrix:[10][10]int;
 
-function fill(row:int, value:int, increment:int): void{
+function fill(row:int, value:int, increment:int): void {
 	let i,inc:int;
 	i=0;
 	inc=increment;
@@ -32,7 +32,7 @@ function fill(row:int, value:int, increment:int): void{
 	}
 }
 
-function show(row:int): void{
+function show(row:int): void {
 	let i:int;
 	i=0;
 	while (i<10) {
@@ -43,7 +43,7 @@ function show(row:int): void{
 }
 
 // Main program
-function main(): void{
+function main(): void {
 	let i:int;
 
 	p(); // Invocation (procedure) as statement
@@ -63,4 +63,3 @@ function main(): void{
 		j=i*10;
 	}
 }
-
