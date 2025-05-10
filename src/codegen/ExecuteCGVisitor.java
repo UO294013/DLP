@@ -74,49 +74,50 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     /**
      * execute[[FunctionDefinition: definition -> ID type varDefinition* stmt*]]():
      *   ID<:>
-     *   int bytesOfLocals = varDefinition*.forEach(vardef -> bytesOfLocals += vardef.type.getSize());
-     *   <enter> bytesOfLocals
-     *   <' * Parameters:>
-     *   int bytesOfParams = execute[[type]] // FunctionType -> Contains the parameters
-     *   int bytesToReturn = definition.type.getSize();
      *   <' * Local variables:>
      *   for (VariableDefinition vd : varDefinition*) {
-     *       execute[[vd]]
+     *     execute[[vd]]
      *   }
+     *   int bytesOfLocals = varDefinition*.isEmpty() ? 0 : -varDefinition*.get(varDefinition*.size() - 1).offset;
+     *   <enter> bytesOfLocals
+     *   <' * Parameters:>
+     *   int bytesOfParams = type.parameters.stream().mapToInt(param -> param.type.size()).sum();
+     *   execute[[type]]
+     *   int bytesToReturn = definition.type.getSize();
      *   for (Statement stmt : stmt*) {
      *     cg.line(stmt.getLine())
-     *     execute[[stmt]](bytesOfLocals, bytesOfParams, bytesToReturn)
+     *     execute[[stmt]] // (bytesOfLocals, bytesOfParams, bytesToReturn)
      *   }
-     *   if (varDefinition*.size() > 0) {
-     *     <enter> -varDefinition*.get(varDefinition*.size() - 1).offset
-     *   }
-     *   if (bytesToReturn == 0) {
+     *   if (type.returnType instanceOf VoidType) {
      *     <ret> bytesToReturn <, > bytesOfLocals <, > bytesOfParams
      *   }
      */
     @Override
     public Void visit(FunctionDefinition fd, Void arg) {
-        int bytesOfLocals = 0;
-        int bytesOfParams = 0;
         codeGenerator.line(fd.getLine());
         codeGenerator.comment("\n\n " + fd.getName() + ":");
-        codeGenerator.comment("\n\t' * Parameters:");
-        fd.getType().accept(this, arg); // TODO: FunctionType sets bytesOfParams
-        int bytesToReturn = fd.getType().getSize(); // ret a, b, c -> Setting the 'c'
         codeGenerator.comment("\n\t' * Local variables:");
         for (VariableDefinition varDef : fd.getVariableDefinitions()) {
             varDef.accept(this, arg);
-            bytesOfLocals += varDef.getType().getSize(); // ret a, b, c -> Setting the 'a'
         }
-        if (!fd.getVariableDefinitions().isEmpty()) {
-            int enterValue = -fd.getVariableDefinitions().getLast().offset;
-            codeGenerator.enter(enterValue);
-        }
+        // ret a, b, c -> Setting the 'b' (bytesOfLocals)
+        int bytesOfLocals = fd.getVariableDefinitions().isEmpty() ? 0 : -fd.getVariableDefinitions().getLast().offset;
+        codeGenerator.enter(bytesOfLocals);
+
+        codeGenerator.comment("\n\t' * Parameters:");
+        // ret a, b, c -> Setting the 'c' (bytesOfParams)
+        int bytesOfParams = ((FunctionType) fd.getType()).getParameters().stream().mapToInt(param ->
+                param.getType().getSize()).sum();
+        fd.getType().accept(this, arg);
+
+        // ret a, b, c -> Setting the 'a' (bytesToReturn)
+        int bytesToReturn = fd.getType().getSize();
+
         for (Statement stmt : fd.getStatements()) {
             codeGenerator.line(stmt.getLine());
             stmt.accept(this, arg);
         }
-        if (bytesToReturn == 0) {
+        if (((FunctionType) fd.getType()).returnType instanceof VoidType) {
             codeGenerator.ret(bytesToReturn, bytesOfLocals, bytesOfParams);
         }
         return null;
@@ -129,7 +130,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      *     }
      */
     @Override
-    public Void visit(FunctionType f, Void arg) { // TODO: bytesOfParams?
+    public Void visit(FunctionType f, Void arg) {
         for (VariableDefinition vd : f.getParameters()) {
             vd.accept(this, arg);
         }
