@@ -1,13 +1,13 @@
 // Generated from C:/Users/Vicente/Desktop/DLP/src/parser/TSmm.g4 by ANTLR 4.13.2
 package parser;
 
-import ast.*;
-import ast.types.*;
-import ast.statements.*;
-import ast.locatables.*;
-import ast.locatables.expressions.*;
-import ast.locatables.definitions.*;
-import java.util.*;
+    import ast.*;
+    import ast.types.*;
+    import ast.statements.*;
+    import ast.locatables.*;
+    import ast.locatables.expressions.*;
+    import ast.locatables.definitions.*;
+    import java.util.*;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
