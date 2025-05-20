@@ -3,7 +3,6 @@ package codegen;
 import ast.Program;
 import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.*;
-import ast.locatables.expressions.Expression;
 import ast.locatables.expressions.FunctionCall;
 import ast.statements.*;
 import ast.types.FunctionType;
