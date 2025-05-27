@@ -47,16 +47,6 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * value[[BooleanLiteral: exp -> BOOL_CONSTANT]]():
-     *   <pushi> exp.value
-     */
-    @Override
-    public Void visit(BooleanLiteral b, Void arg) {
-        codeGenerator.pushi(b.getValue());
-        return null;
-    }
-
-    /**
      * value[[Cast: exp1 -> exp2 type]]():
      *   value[[exp2]]
      *   // cg.convertTo(exp2.type, type)

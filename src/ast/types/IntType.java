@@ -47,7 +47,7 @@ public class IntType extends AbstractType {
     @Override
     public Type logic(Type rExpType, Locatable l) {
         if (rExpType == IntType.getInstance()) {
-            return BooleanType.getInstance();
+            return IntType.getInstance();
         }
         if (rExpType instanceof ErrorType) {
             return rExpType;

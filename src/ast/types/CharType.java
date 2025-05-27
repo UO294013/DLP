@@ -36,7 +36,7 @@ public class CharType extends AbstractType {
     @Override
     public Type comparison(Type rExpType, Locatable l) {
         if (rExpType == CharType.getInstance()) {
-            return BooleanType.getInstance();
+            return IntType.getInstance();
         }
         if (rExpType instanceof ErrorType) {
             return rExpType;

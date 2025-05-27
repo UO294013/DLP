@@ -33,11 +33,6 @@ public class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
-    public TR visit(BooleanLiteral a, TP paramType) {
-        throw new IllegalStateException("BooleanLiteral should not have been visited");
-    }
-
-    @Override
     public TR visit(Cast a, TP paramType) {
         throw new IllegalStateException("Cast should not have been visited");
     }
@@ -181,10 +176,5 @@ public class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
     @Override
     public TR visit(VoidType v, TP paramType) {
         throw new IllegalStateException("VoidType should not have been visited");
-    }
-
-    @Override
-    public TR visit(BooleanType b, TP paramType) {
-        throw new IllegalStateException("BooleanType should not have been visited");
     }
 }

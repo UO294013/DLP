@@ -23,13 +23,6 @@ public class LValueVisitor extends AbstractVisitor<Void, Void> {
     }
 
     @Override
-    public Void visit(BooleanLiteral a, Void paramType) {
-        super.visit(a, paramType);
-        a.setLValue(false);
-        return null;
-    }
-
-    @Override
     public Void visit(Cast a, Void paramType) {
         super.visit(a, paramType);
         a.setLValue(false);

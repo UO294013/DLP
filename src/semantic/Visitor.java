@@ -16,7 +16,6 @@ public interface Visitor<TP, TR> {
     // EXPRESSIONS
     TR visit(ArithmeticOperation a, TP paramType);
     TR visit(ArrayAccess a, TP paramType);
-    TR visit(BooleanLiteral booleanLiteral, TP param);
     TR visit(Cast a, TP paramType);
     TR visit(CharLiteral a, TP paramType);
     TR visit(ComparisonOperation a, TP paramType);
@@ -45,7 +44,6 @@ public interface Visitor<TP, TR> {
     // TYPES
     TR visit(ArrayType a, TP paramType);
     TR visit(CharType c, TP paramType);
-    TR visit(BooleanType b, TP paramType);
     TR visit(ErrorType e, TP paramType);
     TR visit(FunctionType f, TP paramType);
     TR visit(IntType i, TP paramType);
