@@ -295,38 +295,4 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
         codeGenerator.out(w.getExpression().getType());
         return null;
     }
-
-    // PRACTICE EXERCISES
-
-    /**
-     * execute[[ForStatement: stmt1 → stmt2 exp stmt3 stmt4*]]():
-     *   <' * ForStatement>
-     *   int label1 = cg.getLabels(2)
-     *   int label2 = label1 + 1
-     *   execute[[stmt2]]
-     *   <label1 :>
-     *   value[[exp]]
-     *   <jz>label2
-     *   stmt4*.forEach(st -> execute[[st]])
-     *   execute[[stmt3]]
-     *   <jmp>label1
-     *   <label2 :>
-     */
-
-    /**
-     * execute[[DoWhileStatement: stmt1 → stmt2* exp]]():
-     *   <' * DoWhileStatement>
-     *   int label1 = cg.getLabels(1)
-     *   <label1 :>
-     *   stmt2*.forEach(st -> execute[[st]])
-     *   value[[exp]]
-     *   <jnz>label1
-     */
-
-    /**
-     * execute[[SwitchStatement: stmt1 → exp1 (exp2 stmt2*)*]]():
-     *   <' * SwitchStatement>
-     *   TODO
-     *
-     */
 }
