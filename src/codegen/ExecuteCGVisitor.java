@@ -324,7 +324,9 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
      */
 
     /**
-     * execute[[SwitchStatement: stmt1 → TODO]]():
+     * execute[[SwitchStatement: stmt1 → exp1 (exp2 stmt2*)*]]():
+     *   <' * SwitchStatement>
+     *   TODO
      *
      */
 }

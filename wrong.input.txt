@@ -24,5 +24,5 @@ function main(): void {
   ];
   input integer, i;         // Error 7
   f();                      // Error 8
-  record.i = 0;             // Not an error yet, Type Error for the future
+  record.i = 0;             // Not an error yet, Type Error for the future -> (Error 9)
 }
