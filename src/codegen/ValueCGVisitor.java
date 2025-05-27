@@ -1,6 +1,8 @@
 package codegen;
 
 import ast.locatables.expressions.*;
+import ast.types.NumberType;
+import ast.types.Type;
 
 public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
@@ -79,10 +81,14 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * value[[Comparison: exp1 → exp2 (">"|">="|"<"|"<="|"=="|"!=") exp3]]():
+     *   Type typeComp = exp1.type;
+     *   if (exp2.type.suffix().equals("f") {
+     *       typeComp = NumberType.getInstance(); // Ensure comparison of doubles
+     *   }
      *   value[[exp2]]
-     *   exp2.type.convertTo(exp1.type) // cg.convert(exp2.type, exp1.type)
+     *   exp2.type.convertTo(typeComp) // cg.convert(exp2.type, exp1.type)
      *   value[[exp3]]
-     *   exp3.type.convertTo(exp1.type) // cg.convert(exp3.type, exp1.type)
+     *   exp3.type.convertTo(typeComp) // cg.convert(exp3.type, exp1.type)
      *   switch (exp1.operator) {  // cg.comparison(exp1.getOperator(), exp1.getType())
      *     case ">": <gt> exp1.type.suffix() break;
      *     case ">=": <ge> exp1.type.suffix() break;
@@ -94,11 +100,15 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(ComparisonOperation c, Void arg) {
-        c.getLeftOperand().accept(this, null);
-        codeGenerator.convertTo(c.getLeftOperand().getType(), c.getType());
-        c.getRightOperand().accept(this, null);
-        codeGenerator.convertTo(c.getRightOperand().getType(), c.getType());
-        codeGenerator.comparison(c.getOperatorName(), c.getType());
+        Type typeComp = c.getType();
+        if (c.getLeftOperand().getType().suffix().equals("f")) {
+            typeComp = NumberType.getInstance();
+        }
+        c.getLeftOperand().accept(this, arg);
+        codeGenerator.convertTo(c.getLeftOperand().getType(), typeComp);
+        c.getRightOperand().accept(this, arg);
+        codeGenerator.convertTo(c.getRightOperand().getType(), typeComp);
+        codeGenerator.comparison(c.getOperatorName(), typeComp);
         return null;
     }
 
