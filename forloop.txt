@@ -1,0 +1,12 @@
+
+let i, counter: int;
+
+// Main program
+function main(): void {
+    counter = 10;
+    log counter, '\n';
+    for (i = 0; i < 10; i = i + 1) {
+        counter = counter - 1;
+        log counter, '\n';
+    }
+}

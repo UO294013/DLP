@@ -132,6 +132,14 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     }
 
     @Override
+    public Void visit(For f, Type paramType) {
+        super.visit(f, paramType);
+        // TODO: visit del init y el increment?
+        f.getCondition().getType().mustBeLogical(f);
+        return null;
+    }
+
+    @Override
     public Void visit(IfElse i, Type paramType) {
         super.visit(i, paramType);
         i.getCondition().getType().mustBeLogical(i);

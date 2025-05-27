@@ -169,6 +169,39 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
     }
 
     /**
+     * execute[[ForStatement: stmt1 → stmt2 exp stmt3 stmt4*]]():
+     *   <' * ForStatement>
+     *   int label1 = cg.getLabels(2)
+     *   int label2 = label1 + 1
+     *   execute[[stmt2]]
+     *   <label1 :>
+     *   value[[exp]]
+     *   <jz>label2
+     *   stmt4*.forEach(st -> execute[[st]])
+     *   execute[[stmt3]]
+     *   <jmp>label1
+     *   <label2 :>
+     */
+    @Override
+    public Void visit(For f, FunctionDefinition arg) {
+        codeGenerator.comment("\n\t' * For");
+        int label1 = codeGenerator.getLabels(2);
+        int label2 = label1 + 1;
+        f.getInit().accept(this, arg);
+        codeGenerator.addLabel(label1);
+        f.getCondition().accept(valueCGVisitor, null);
+        codeGenerator.jz(label2);
+        for (Statement st : f.getStatements()) {
+            codeGenerator.line(st.getLine());
+            st.accept(this, arg);
+        }
+        f.getIncrement().accept(this, arg);
+        codeGenerator.jmp(label1);
+        codeGenerator.addLabel(label2);
+        return null;
+    }
+
+    /**
      * execute[[FunctionCall: stmt -> exp1 exp2*]]():
      *   value[[stmt]]
      *   if (!(stmt.type.returnType instanceof VoidType)) {

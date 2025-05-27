@@ -95,6 +95,11 @@ public class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
+    public TR visit(For f, TP paramType) {
+        throw new IllegalStateException("For should not have been visited");
+    }
+
+    @Override
     public TR visit(IfElse i, TP paramType) {
         throw new IllegalStateException("IfElse should not have been visited");
     }

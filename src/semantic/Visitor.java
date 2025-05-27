@@ -30,6 +30,7 @@ public interface Visitor<TP, TR> {
 
     // STATEMENTS
     TR visit(Assignment a, TP paramType);
+    TR visit(For f, TP param);
     TR visit(IfElse i, TP paramType);
     TR visit(Read r, TP paramType);
     TR visit(Return r, TP paramType);

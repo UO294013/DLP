@@ -70,6 +70,7 @@ nonreturnstatement returns [List<Statement> ast = new ArrayList<>()] locals [Lis
     | exp1=expression '=' exp2=expression ';' { $ast.add(new Assignment($exp1.ast.getLine(), $exp1.ast.getColumn(), $exp1.ast, $exp2.ast)); }
     | 'if' '(' expression ')' b1=block ('else' b2=block { if ($b2.statements != null) $elseBlock = $b2.statements; })? { $ast.add(new IfElse($expression.ast, $b1.statements, $elseBlock, $expression.ast.getLine(), $expression.ast.getColumn())); }
     | 'while' '(' expression ')' block { $ast.add(new While($expression.ast, $block.statements, $expression.ast.getLine(), $expression.ast.getColumn())); }
+    | 'for' '(' exp1=expression '=' exp2=expression ';' exp3=expression ';' exp4=expression '=' exp5=expression ')' b=block { $ast.add(new For(new Assignment($exp1.ast.getLine(), $exp1.ast.getColumn(), $exp1.ast, $exp2.ast), $exp3.ast, new Assignment($exp4.ast.getLine(), $exp4.ast.getColumn(), $exp4.ast, $exp5.ast), $b.statements, $exp3.ast.getLine(), $exp3.ast.getColumn())); }
     | ID '(' arguments ')' ';' { $ast.add(new FunctionCall($ID.getLine(), $ID.getCharPositionInLine() + 1, new Variable($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $arguments.ast)); }
     ;
 
