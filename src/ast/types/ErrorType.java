@@ -79,10 +79,6 @@ public class ErrorType extends AbstractType {
     }
 
     @Override
-    public void mustBeMain(String name, Locatable l) {
-    }
-
-    @Override
     public <TP, TR> TR accept(Visitor<TP, TR> v, TP param) {
         return v.visit(this, param);
     }

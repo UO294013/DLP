@@ -47,6 +47,16 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
+     * value[[BooleanLiteral: exp -> BOOL_CONSTANT]]():
+     *   <pushi> exp.value
+     */
+    @Override
+    public Void visit(BooleanLiteral b, Void arg) {
+        codeGenerator.pushi(b.getValue());
+        return null;
+    }
+
+    /**
      * value[[Cast: exp1 -> exp2 type]]():
      *   value[[exp2]]
      *   // cg.convertTo(exp2.type, type)
@@ -173,17 +183,17 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * value[[UnaryMinus: exp1 -> exp2]]():
+     *     <pushi 0> // <push> exp2.type.suffix() < 0>
      *     value[[exp2]]
      *     exp2.type.convertTo(exp1.type) // cg.convert(exp2.type, exp1.type)
-     *     <push> exp2.type.suffix() < 0>
-     *     <sub> exp2.type.suffix()
+     *     <subi> // <sub> exp2.type.suffix()
      */
     @Override
     public Void visit(UnaryMinus u, Void arg) {
+        codeGenerator.pushi(0); // push(u.getExpression().getType(), 0);
         u.getExpression().accept(this, null);
         codeGenerator.convertTo(u.getExpression().getType(), u.getType());
-        codeGenerator.push(u.getExpression().getType(), 0);
-        codeGenerator.sub(u.getExpression().getType());
+        codeGenerator.subi(); // sub(u.getExpression().getType()); Only applicable to int and char
         return null;
     }
 

@@ -1,0 +1,37 @@
+
+let d: number;
+let i: int;
+let c: char;
+let b: boolean;
+
+function main(): void {
+
+    let struct: [
+        let a1: number;
+        let a2: int;
+        let a3: char;
+        let a4: boolean;
+    ];
+
+	struct.a1 = 4.5;
+	struct.a2 = 3;
+	struct.a3 = 'a';
+	struct.a4 = False;
+
+    d = struct.a1 * 2.0;
+    i = struct.a2 * 2;
+    c = 'b';
+    b = True;
+
+    if (b) {
+        if (c > struct.a3) {
+            if (i > struct.a2) {
+                if (d > struct.a1) {
+                    log b, '\n'; // 1
+                    i = -c;
+                    log i, '\n';
+                }
+            }
+        }
+    }
+}

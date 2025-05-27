@@ -18,7 +18,6 @@ public interface Type extends ASTNode {
     Type squareBrackets(Type t, Locatable l);
     Type dot(String field, Locatable l);
     Type parenthesis(List<Type> types, Locatable l);
-    void mustBeMain(String name, Locatable l);
 
     int getSize();
     String suffix();

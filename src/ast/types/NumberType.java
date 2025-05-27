@@ -36,7 +36,7 @@ public class NumberType extends AbstractType {
     @Override
     public Type comparison(Type rExpType, Locatable l) {
         if (rExpType == NumberType.getInstance()) {
-            return IntType.getInstance();
+            return BooleanType.getInstance();
         }
         if (rExpType instanceof ErrorType) {
             return rExpType;

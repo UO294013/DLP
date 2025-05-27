@@ -88,8 +88,8 @@ public class CodeGenerator {
         template("\n\tmuli");
     }
 
-    public void sub(Type type) {
-        template("\n\tsub" + type.suffix());
+    public void subi() {
+        template("\n\tsubi");
     }
 
     public void ret(int bytesToReturn, int bytesOfLocals, int bytesOfParams) {

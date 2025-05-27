@@ -13,10 +13,6 @@ public class ArrayType extends AbstractType {
         this.type = type;
     }
 
-    public int getArraySize() {
-        return arraySize;
-    }
-
     public Type getType() {
         return type;
     }
@@ -41,6 +37,6 @@ public class ArrayType extends AbstractType {
 
     @Override
     public int getSize() {
-        return arraySize * type.getSize(); // Size of the type of the stored elements times (*) number of elements
+        return arraySize * type.getSize(); // Size of the stored elements' types * number of elements
     }
 }

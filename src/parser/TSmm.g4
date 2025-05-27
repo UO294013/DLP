@@ -33,6 +33,7 @@ expression returns [Expression ast]:
     | INT_CONSTANT { $ast = new IntLiteral(LexerHelper.lexemeToInt($INT_CONSTANT.text), $INT_CONSTANT.getLine(), $INT_CONSTANT.getCharPositionInLine() + 1); }
     | REAL_CONSTANT { $ast = new NumberLiteral(LexerHelper.lexemeToReal($REAL_CONSTANT.text), $REAL_CONSTANT.getLine(), $REAL_CONSTANT.getCharPositionInLine() + 1); }
     | CHAR_CONSTANT { $ast = new CharLiteral(LexerHelper.lexemeToChar($CHAR_CONSTANT.text), $CHAR_CONSTANT.getLine(), $CHAR_CONSTANT.getCharPositionInLine() + 1); }
+    | BOOL_CONSTANT { $ast = new BooleanLiteral(LexerHelper.lexemeToBoolean($BOOL_CONSTANT.text), $BOOL_CONSTANT.getLine(), $BOOL_CONSTANT.getCharPositionInLine() + 1); }
     | ID { $ast = new Variable($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
     ;
 
@@ -57,6 +58,7 @@ builtin returns [Type ast]:
     'int' { $ast = IntType.getInstance(); }
     | 'number' { $ast = NumberType.getInstance(); }
     | 'char' { $ast = CharType.getInstance(); }
+    | 'boolean' { $ast = BooleanType.getInstance(); }
     ;
 
 statement returns [List<Statement> ast = new ArrayList<>()]:
@@ -127,6 +129,10 @@ REAL_CONSTANT: DIGIT+ '.' DIGIT* EXPONENT?
 
 CHAR_CONSTANT: '\'' . '\''
              | '\'\\' ('n'|'t'|INT_CONSTANT) '\''
+             ;
+
+BOOL_CONSTANT: 'True'
+             | 'False'
              ;
 
 ID: ('_'|[A-Za-z]) ([A-Za-z]|'_'|DIGIT)*

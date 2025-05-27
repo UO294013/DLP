@@ -1,0 +1,200 @@
+
+#source	"boolean.txt"
+
+	' * real d (offset 0)
+	' * int i (offset 4)
+	' * char c (offset 6)
+	' * boolean b (offset 7)
+
+' Invocation to the main function
+call main
+halt
+
+
+#line	7
+
+ main:
+	' * Parameters:
+	' * Local variables:
+	' * RecordType [fields=[RecordField [name=a1, type=real, offset=0], RecordField [name=a2, type=int, offset=4], RecordField [name=a3, type=char, offset=6], RecordField [name=a4, type=boolean, offset=7]]} struct (offset -9)
+	enter	9
+
+#line	16
+	' * Assignment
+	push	bp
+	pushi	-9
+	addi
+	pushi	0
+	addi
+	pushf	4.5
+	storef
+
+#line	17
+	' * Assignment
+	push	bp
+	pushi	-9
+	addi
+	pushi	4
+	addi
+	pushi	3
+	storei
+
+#line	18
+	' * Assignment
+	push	bp
+	pushi	-9
+	addi
+	pushi	6
+	addi
+	pushb	97
+	storeb
+
+#line	19
+	' * Assignment
+	push	bp
+	pushi	-9
+	addi
+	pushi	7
+	addi
+	pushi	0
+	storei
+
+#line	21
+	' * Assignment
+	pusha	0
+	push	bp
+	pushi	-9
+	addi
+	pushi	0
+	addi
+	loadf
+	pushf	2.0
+	mulf
+	storef
+
+#line	22
+	' * Assignment
+	pusha	4
+	push	bp
+	pushi	-9
+	addi
+	pushi	4
+	addi
+	loadi
+	pushi	2
+	muli
+	storei
+
+#line	23
+	' * Assignment
+	pusha	6
+	pushb	98
+	storeb
+
+#line	24
+	' * Assignment
+	pusha	7
+	pushi	1
+	storei
+
+#line	26
+	' * IfElse
+	pusha	7
+	loadi
+	jz	label1
+	' * If body
+
+#line	27
+	' * IfElse
+	pusha	6
+	loadb
+	b2i
+	push	bp
+	pushi	-9
+	addi
+	pushi	6
+	addi
+	loadb
+	b2i
+	gti
+	jz	label3
+	' * If body
+
+#line	28
+	' * IfElse
+	pusha	4
+	loadi
+	push	bp
+	pushi	-9
+	addi
+	pushi	4
+	addi
+	loadi
+	gti
+	jz	label5
+	' * If body
+
+#line	29
+	' * IfElse
+	pusha	0
+	loadf
+	f2i
+	push	bp
+	pushi	-9
+	addi
+	pushi	0
+	addi
+	loadf
+	f2i
+	gti
+	jz	label7
+	' * If body
+
+#line	30
+	' * Write
+	pusha	7
+	loadi
+	outi
+
+#line	30
+	' * Write
+	pushb	10
+	outb
+
+#line	31
+	' * Assignment
+	pusha	4
+	pushi	0
+	pusha	6
+	loadb
+	b2i
+	subi
+	storei
+
+#line	32
+	' * Write
+	pusha	4
+	loadi
+	outi
+
+#line	32
+	' * Write
+	pushb	10
+	outb
+	jmp	label8
+label7:
+	' * Else body
+label8:
+	jmp	label6
+label5:
+	' * Else body
+label6:
+	jmp	label4
+label3:
+	' * Else body
+label4:
+	jmp	label2
+label1:
+	' * Else body
+label2:
+	ret 0, 9, 0

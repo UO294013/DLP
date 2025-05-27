@@ -53,6 +53,6 @@ public class RecordType extends AbstractType {
         for (RecordField field : fields){
             totalSize += field.getType().getSize();
         }
-        return totalSize; // Size of the types of the stored elements
+        return totalSize; // Size of the stored elements' types added
     }
 }

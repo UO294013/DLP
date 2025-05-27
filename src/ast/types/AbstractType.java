@@ -80,11 +80,6 @@ public class AbstractType implements Type {
     }
 
     @Override
-    public void mustBeMain(String name, Locatable l) {
-        new ErrorType("Error: Unsupported operation. " + name + " is not a valid main", l);
-    }
-
-    @Override
     public int getSize() {
         return 0;
     }

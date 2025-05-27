@@ -38,6 +38,11 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
+    public TR visit(BooleanLiteral b, TP paramType) {
+        return null;
+    }
+
+    @Override
     public TR visit(Cast a, TP paramType) {
         a.getExpression().accept(this, paramType);
         a.getType().accept(this, paramType);
@@ -226,6 +231,11 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(VoidType v, TP paramType) {
+        return null;
+    }
+
+    @Override
+    public TR visit(BooleanType b, TP paramType) {
         return null;
     }
 }

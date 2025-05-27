@@ -11,7 +11,7 @@ import semantic.AbstractVisitor;
 
 /*
  * Offsets:
- * - Globals: Sum of the sizes of previous definitions' types
+ * - Globals: Sum of previous definitions' types sizes
  * Intercept the children in the FunctionType and prevent visiting them to calculate the offset
  * - Locals: 4 (function constants) + Sum of the next definitions' types sizes
  * - Parameters: MINUS (-) Sum of the previous definitions' types sizes (including itself)
