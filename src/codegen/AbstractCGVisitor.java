@@ -58,6 +58,11 @@ public class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
+    public TR visit(Increment i, TP paramType) {
+        throw new IllegalStateException("Increment should not have been visited");
+    }
+
+    @Override
     public TR visit(IntLiteral i, TP paramType) {
         throw new IllegalStateException("IntLiteral should not have been visited");
     }

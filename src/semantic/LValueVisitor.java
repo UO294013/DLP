@@ -58,6 +58,13 @@ public class LValueVisitor extends AbstractVisitor<Void, Void> {
     }
 
     @Override
+    public Void visit(Increment i, Void paramType) {
+        super.visit(i, paramType);
+        i.setLValue(false);
+        return null;
+    }
+
+    @Override
     public Void visit(IntLiteral i, Void paramType) {
         super.visit(i, paramType);
         i.setLValue(false);

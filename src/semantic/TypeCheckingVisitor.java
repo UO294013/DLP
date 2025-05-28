@@ -79,6 +79,13 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     }
 
     @Override
+    public Void visit(Increment i, Type paramType) {
+        // super.visit(i, paramType);
+        i.setType(i.getId().getType().arithmetic(i));
+        return null;
+    }
+
+    @Override
     public Void visit(IntLiteral i, Type paramType) {
         i.setType(IntType.getInstance());
         return null;

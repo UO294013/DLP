@@ -88,6 +88,10 @@ public class CodeGenerator {
         template("\n\tmuli");
     }
 
+    public void dup() {
+        template("\n\tdup");
+    }
+
     public void subi() {
         template("\n\tsubi");
     }

@@ -4,6 +4,7 @@ import ast.Program;
 import ast.locatables.definitions.Definition;
 import ast.locatables.definitions.*;
 import ast.locatables.expressions.FunctionCall;
+import ast.locatables.expressions.Increment;
 import ast.statements.*;
 import ast.types.FunctionType;
 import ast.types.VoidType;
@@ -169,16 +170,57 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
     }
 
     /**
-     * execute[[ForStatement: stmt1 → stmt2 exp stmt3 stmt4*]]():
+     * execute[[Increment: stmt -> exp1]]():
+     *   if (stmt.pos == 'l' {
+     *      address[[exp1]]
+     *      value[[stmt]]
+     *      <store> stmt.type.returnType.suffix()
+     *   } else if (stmt.pos == 'r') {
+     *      address[[exp1]]                 // 1. Compute address
+     *      <load> exp1.type.suffix()       // 2. Load the value and duplicate for return
+     *      <dup>
+     *      <pushi 1>                       // 3. Increment / Decrement value
+     *      if (i.op.equals("++")) {
+     *          <add>
+     *      } else {
+     *          <subi>
+     *      }
+     *      address[[exp1]]                 // 4. Save incremented value
+     *      <store>
+     *   }
+     */
+    @Override
+    public Void visit(Increment i, FunctionDefinition arg) {
+        i.getId().accept(addressCGVisitor, null);
+        if (i.pos == 'l') {
+            i.accept(valueCGVisitor, null);
+            codeGenerator.store(i.getType());
+        } else if (i.pos == 'r') {
+            codeGenerator.load(i.getType());
+            codeGenerator.dup();
+            codeGenerator.pushi(1);
+            if (i.op.equals("++")) {
+                codeGenerator.addi();
+            } else {
+                codeGenerator.subi();
+            }
+            i.getId().accept(addressCGVisitor, null);
+            codeGenerator.store(i.getType());
+        }
+        return null;
+    }
+
+    /**
+     * execute[[ForStatement: stmt1 → stmt2 exp1 stmt2 stmt3*]]():
      *   <' * ForStatement>
      *   int label1 = cg.getLabels(2)
      *   int label2 = label1 + 1
      *   execute[[stmt2]]
      *   <label1 :>
-     *   value[[exp]]
+     *   value[[exp1]]
      *   <jz>label2
-     *   stmt4*.forEach(st -> execute[[st]])
-     *   execute[[stmt3]]
+     *   stmt3*.forEach(st -> execute[[st]])
+     *   execute[[stmt2]]
      *   <jmp>label1
      *   <label2 :>
      */
@@ -195,7 +237,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
             codeGenerator.line(st.getLine());
             st.accept(this, arg);
         }
-        f.getIncrement().accept(this, arg);
+        f.getIncrement().accept(this, null);
         codeGenerator.jmp(label1);
         codeGenerator.addLabel(label2);
         return null;

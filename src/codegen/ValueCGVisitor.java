@@ -141,6 +141,30 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
+     * value[[Increment: exp1 -> exp2]]():
+     *   address[[exp2]]
+     *   <load> exp1.type.suffix()
+     *   <pushi 1>
+     *   if (exp1.op.equals("++")) {
+     *       <addi>
+     *   } else {
+     *       <subi>
+     *   }
+     */
+    @Override
+    public Void visit(Increment i, Void arg) {
+        i.getId().accept(addressCGVisitor, null);
+        codeGenerator.load(i.getType());
+        codeGenerator.pushi(1);
+        if (i.op.equals("++")) {
+            codeGenerator.addi();
+        } else {
+            codeGenerator.subi();
+        }
+        return null;
+    }
+
+    /**
      * value[[IntLiteral: exp -> INT_CONSTANT]]():
      *   <pushi> exp.value
      */

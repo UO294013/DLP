@@ -26,6 +26,8 @@ expression returns [Expression ast]:
     | '(' expression 'as' type ')' { $ast = new Cast($expression.ast, $type.ast, $expression.ast.getLine(), $expression.ast.getColumn()); }
     | '-' expression { $ast = new UnaryMinus($expression.ast, $expression.ast.getLine(), $expression.ast.getColumn()); }
     | '!' expression { $ast = new UnaryNot($expression.ast, $expression.ast.getLine(), $expression.ast.getColumn()); }
+    | op=('++'|'--') ID { $ast = new Increment(new Variable($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $op.text, 'l', $ID.getLine(), $ID.getCharPositionInLine() + 1); }
+    | ID op=('++'|'--') { $ast = new Increment(new Variable($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $op.text, 'r', $ID.getLine(), $ID.getCharPositionInLine() + 1); }
     | exp1=expression op=('*'|'/'|'%') exp2=expression { $ast = new ArithmeticOperation($exp1.ast.getLine(), $exp1.ast.getColumn(), $exp1.ast, $exp2.ast, $op.text); }
     | exp1=expression op=('+'|'-') exp2=expression { $ast = new ArithmeticOperation($exp1.ast.getLine(), $exp1.ast.getColumn(), $exp1.ast, $exp2.ast, $op.text); }
     | exp1=expression op=('>'|'>='|'<'|'<='|'!='|'==') exp2=expression { $ast = new ComparisonOperation($exp1.ast.getLine(), $exp1.ast.getColumn(), $exp1.ast, $exp2.ast, $op.text); }
@@ -70,8 +72,10 @@ nonreturnstatement returns [List<Statement> ast = new ArrayList<>()] locals [Lis
     | exp1=expression '=' exp2=expression ';' { $ast.add(new Assignment($exp1.ast.getLine(), $exp1.ast.getColumn(), $exp1.ast, $exp2.ast)); }
     | 'if' '(' expression ')' b1=block ('else' b2=block { if ($b2.statements != null) $elseBlock = $b2.statements; })? { $ast.add(new IfElse($expression.ast, $b1.statements, $elseBlock, $expression.ast.getLine(), $expression.ast.getColumn())); }
     | 'while' '(' expression ')' block { $ast.add(new While($expression.ast, $block.statements, $expression.ast.getLine(), $expression.ast.getColumn())); }
-    | 'for' '(' exp1=expression '=' exp2=expression ';' exp3=expression ';' exp4=expression '=' exp5=expression ')' b=block { $ast.add(new For(new Assignment($exp1.ast.getLine(), $exp1.ast.getColumn(), $exp1.ast, $exp2.ast), $exp3.ast, new Assignment($exp4.ast.getLine(), $exp4.ast.getColumn(), $exp4.ast, $exp5.ast), $b.statements, $exp3.ast.getLine(), $exp3.ast.getColumn())); }
+    | 'for' '(' exp1=expression '=' exp2=expression ';' exp3=expression ';' stmt=statement ')' b=block { $ast.add(new For(new Assignment($exp1.ast.getLine(), $exp1.ast.getColumn(), $exp1.ast, $exp2.ast), $exp3.ast, $stmt.ast.get(0), $b.statements, $exp3.ast.getLine(), $exp3.ast.getColumn())); }
     | ID '(' arguments ')' ';' { $ast.add(new FunctionCall($ID.getLine(), $ID.getCharPositionInLine() + 1, new Variable($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $arguments.ast)); }
+    | op=('++'|'--') ID ';'? { $ast.add(new Increment(new Variable($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $op.text, 'l', $ID.getLine(), $ID.getCharPositionInLine() + 1)); }
+    | ID op=('++'|'--') ';'? { $ast.add(new Increment(new Variable($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $op.text, 'r', $ID.getLine(), $ID.getCharPositionInLine() + 1)); }
     ;
 
 definition returns [List<Definition> ast = new ArrayList<>()]:

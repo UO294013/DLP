@@ -72,6 +72,12 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
+    public TR visit(Increment i, TP param) {
+        i.getId().accept(this, param);
+        return null;
+    }
+
+    @Override
     public TR visit(IntLiteral i, TP paramType) {
         return null;
     }

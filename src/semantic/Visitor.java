@@ -21,6 +21,7 @@ public interface Visitor<TP, TR> {
     TR visit(ComparisonOperation a, TP paramType);
     TR visit(FieldAccess f, TP paramType);
     TR visit(FunctionCall f, TP paramType);
+    TR visit(Increment increment, TP param);
     TR visit(IntLiteral i, TP paramType);
     TR visit(LogicOperation l, TP paramType);
     TR visit(NumberLiteral n, TP paramType);
