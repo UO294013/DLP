@@ -48,11 +48,13 @@ label1:
 
 #line	9
 	pusha	2
-	loadi
 	dup
+	loadi
+	pusha	2
+	dup
+	loadi
 	pushi	1
 	subi
-	pusha	2
 	storei
 
 #line	10
@@ -66,11 +68,13 @@ label1:
 	pushb	10
 	outb
 	pusha	0
-	loadi
 	dup
+	loadi
+	pusha	0
+	dup
+	loadi
 	pushi	1
 	addi
-	pusha	0
 	storei
 	jmp	label1
 label2:

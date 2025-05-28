@@ -176,17 +176,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
      *      value[[stmt]]
      *      <store> stmt.type.returnType.suffix()
      *   } else if (stmt.pos == 'r') {
-     *      address[[exp1]]                 // 1. Compute address
-     *      <load> exp1.type.suffix()       // 2. Load the value and duplicate for return
-     *      <dup>
-     *      <pushi 1>                       // 3. Increment / Decrement value
-     *      if (i.op.equals("++")) {
-     *          <add>
-     *      } else {
-     *          <subi>
-     *      }
-     *      address[[exp1]]                 // 4. Save incremented value
-     *      <store>
+     *
      *   }
      */
     @Override
@@ -196,16 +186,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
             i.accept(valueCGVisitor, null);
             codeGenerator.store(i.getType());
         } else if (i.pos == 'r') {
-            codeGenerator.load(i.getType());
-            codeGenerator.dup();
-            codeGenerator.pushi(1);
-            if (i.op.equals("++")) {
-                codeGenerator.addi();
-            } else {
-                codeGenerator.subi();
-            }
-            i.getId().accept(addressCGVisitor, null);
-            codeGenerator.store(i.getType());
+
         }
         return null;
     }
