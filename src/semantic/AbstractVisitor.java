@@ -115,6 +115,15 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
+    public TR visit(DoWhile dw, TP paramType) {
+        for (Statement st : dw.getStatements()) {
+            st.accept(this, paramType);
+        }
+        dw.getCondition().accept(this, paramType);
+        return null;
+    }
+
+    @Override
     public TR visit(IfElse i, TP paramType) {
         i.getCondition().accept(this, paramType);
         for (Statement st : i.getIfBody()) {

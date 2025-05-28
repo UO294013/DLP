@@ -1,0 +1,18 @@
+
+let i: int;
+
+// Main program
+function main(): void {
+	let a, b: int;
+	a = 1;
+	b = 2;
+	i = 0;
+
+	do {
+        a = a * b;
+        i = i + 1;
+        log a, '\n';
+	} while (i < 10);
+
+	log i, '\n';
+}

@@ -70,6 +70,7 @@ nonreturnstatement returns [List<Statement> ast = new ArrayList<>()] locals [Lis
     | exp1=expression '=' exp2=expression ';' { $ast.add(new Assignment($exp1.ast.getLine(), $exp1.ast.getColumn(), $exp1.ast, $exp2.ast)); }
     | 'if' '(' expression ')' b1=block ('else' b2=block { if ($b2.statements != null) $elseBlock = $b2.statements; })? { $ast.add(new IfElse($expression.ast, $b1.statements, $elseBlock, $expression.ast.getLine(), $expression.ast.getColumn())); }
     | 'while' '(' expression ')' block { $ast.add(new While($expression.ast, $block.statements, $expression.ast.getLine(), $expression.ast.getColumn())); }
+    | 'do' '{' b=sttmts '}' 'while' '(' e=expression ')' ';' { $ast.add(new DoWhile($b.statements, $e.ast, $e.ast.getLine(), $e.ast.getColumn())); }
     | ID '(' arguments ')' ';' { $ast.add(new FunctionCall($ID.getLine(), $ID.getCharPositionInLine() + 1, new Variable($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $arguments.ast)); }
     ;
 
@@ -104,6 +105,10 @@ parameters returns [List<VariableDefinition> ast = new ArrayList<>()]:
 
 block returns [List<Statement> statements = new ArrayList<>()]:
     ('{' st1=statement { $statements.addAll($st1.ast); } (st2=statement { $statements.addAll($st2.ast); })* '}'|st3=statement { $statements.addAll($st3.ast); })?
+    ;
+
+sttmts returns [List<Statement> statements = new ArrayList<>()]:
+    st1=statement { $statements.addAll($st1.ast); } (st2=statement { $statements.addAll($st2.ast); })*
     ;
 
 /* LEXICAL ANALYZER */

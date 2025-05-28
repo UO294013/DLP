@@ -169,6 +169,31 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FunctionDefinition, Void
     }
 
     /**
+     * execute[[DoWhile: stmt -> stmt2* exp]]():
+     *   <' * DoWhile>
+     *   int label1 = cg.getLabels(1)
+     *   <label>label1<:>
+     *   for (Statement st : stmt2*) {
+     *       execute[[st]]
+     *   }
+     *   value[[exp]]
+     *   <jnz label>label1
+     */
+    @Override
+    public Void visit(DoWhile dw, FunctionDefinition arg) {
+        codeGenerator.comment("\n\t' * DoWhile");
+        int label1 = codeGenerator.getLabels(1);
+        codeGenerator.addLabel(label1);
+        for (Statement stmt : dw.getStatements()) {
+            codeGenerator.line(stmt.getLine());
+            stmt.accept(this, arg);
+        }
+        dw.getCondition().accept(valueCGVisitor, null);
+        codeGenerator.jnz(label1);
+        return null;
+    }
+
+    /**
      * execute[[FunctionCall: stmt -> exp1 exp2*]]():
      *   value[[stmt]]
      *   if (!(stmt.type.returnType instanceof VoidType)) {
